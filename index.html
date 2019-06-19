@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>edumessenger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="pragma" content="no-cache" />
+
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src * 'self' 'unsafe-inline' 'unsafe-eval' gap: gap://ready file: data: https://messenger.dibig.at;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' gap: gap://ready file: data: https://messenger.dibig.at https://launch.eduvidual.org;
+    connect-src * https://messenger.dibig.at http://localhost;
+    img-src * 'self' 'unsafe-inline' 'unsafe-eval' blob: gap: gap://ready file: data: cdvphotolibrary: http: https: https://messenger.dibig.at android-webview-video-poster:;
+    media-src * 'self' 'unsafe-inline' 'unsafe-eval' gap: gap://ready file: data: cdvphotolibrary: http: https: https://messenger.dibig.at;
+    style-src * 'self' 'unsafe-inline' 'unsafe-eval' gap: gap://ready file: data: https://messenger.dibig.at;
+    ">
+
+    <link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="jquery.mobile-1.4.5/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="jquery.mobile-1.4.5/jqm-icon-pack-fa.css" />
+    <link rel="stylesheet" href="css/edm_dibig.min.css" />
+    <link rel="stylesheet" href="css/main.css" class="cache" />
+    <link rel="stylesheet" href="css/gfx.css" class="cache" />
+
+    <script src="jquery.mobile-1.4.5/jquery-1.11.1.min.js"></script>
+    <script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="js/static/showdown.min.js"></script>
+    <script src="js/static/clipboard.min.js"></script>
+    <script src="js/static/app.js"></script>
+
+    <script src="js/availability.js" class="cache"></script>
+    <script src="js/cache.js" class="cache"></script>
+    <script src="js/central.js" class="cache"></script>
+    <script src="js/connector.js" class="cache"></script>
+    <script src="js/courses.js" class="cache"></script>
+    <script src="js/conversations.js" class="cache"></script>
+    <script src="js/db.js" class="cache"></script>
+    <script src="js/discussions.js" class="cache"></script>
+    <script src="js/lang.js" class="cache"></script>
+    <script src="js/lib.js" class="cache"></script>
+    <script src="js/moodle.js" class="cache"></script>
+    <script src="js/posts.js" class="cache"></script>
+    <script src="js/push.js" class="cache"></script>
+    <script src="js/ui.js" class="cache"></script>
+
+    <!--
+
+    <script src="js/courses.js" class="cache"></script>
+
+
+    <script src="js/forums.js" class="cache"></script>
+    <script src="js/helper.js" class="cache"></script>
+    <script src="js/iusers.js" class="cache"></script>
+    <script src="js/instances.js" class="cache"></script>
+
+    <script src="js/messages.js" class="cache"></script>
+
+    <script src="js/purchase.js" class="cache"></script>
+
+    <script src="js/tasks.js" class="cache"></script>
+
+    <script src="js/user.js" class="cache"></script>
+-->
+</head>
+<body>
+    <div id="initialization" data-role="page">
+        <div role="main" class="ui-content">
+            <div class="splash" style="background-image:url(img/splash.png);">&nbsp;</div>
+            <div class="bar" data-role="controlgroup" style="max-width: 50px; display: none;">
+                <!-- <a class="welcome-encryption" href="#" data-role="button" data-icon="lock" data-iconpos="notext">Encryption</a> -->
+                <a class="welcome-cache" href="#" data-role="button" data-icon="cloud-download" data-iconpos="notext">Cache</a>
+                <a class="welcome-database" href="#" data-role="button" data-icon="gears" data-iconpos="notext">Database</a>
+                <a class="welcome-interface" href="#" data-role="button" data-icon="group" data-iconpos="notext">Interface</a>
+            </div>
+            <div class="message" class="hide">
+                <span class="error"></span>
+                <!-- <a href="#" onclick="" data-role="button" data-icon="action" data-translate="Contact_support">Hilfe holen</a> -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- THIS IS USED WHEN WE ARE WORKING WITHOUT CACHE -->
+    <div id="availability" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" onclick="UI.navigate('#mainmenu');" data-role="button" data-icon="bars" data-iconpos="notext">Menu</a>
+            <h1 data-translate="Availability">Erreichbarkeit</h1>
+        </div>
+        <div role="main" class="ui-content purchase edumessengerproabo">
+            <p data-translate="Availability_infotext"></p>
+            <table id="availability-grid" border="0" width="100%">
+                <thead>
+                    <tr>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="a">°</th>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="d-0">Mon</th>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="d-1">Tue</th>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="d-2">Wed</th>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="d-3">Thu</th>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="d-4">Fri</th>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="d-5">Sat</th>
+                        <th width="12.5%" onclick="AVAILABILITY.availabilityToggle(this);" data-id="d-6">Sun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <br />&nbsp;
+        </div>
+    </div>
+
+    <div id="connectMoodle" data-role="page" class="cache page-ul-gridlayout">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1><span data-translate="connect_site">Seite verbinden</span>!</h1>
+        </div>
+        <div role="main" class="ui-content" class="splash">
+            <label for="connectMoodle-url" data-translate="url_of_moodle_site">URL der Moodle-Site</label>
+            <table border="0" style="width: 100%;">
+                <tr>
+                    <td width="52">https://</td>
+                    <td><input type="url" onkeyup="return MOODLE.siteTest();" id="connectMoodle-url" /></td>
+                </tr>
+            </table>
+            <a href="#" onclick="return MOODLE.siteLogin();" id="connectMoodle-login" class="ui-state-disabled" data-role="button" data-icon="key" data-translate="login">Login</a>
+            <div id="moodle_but_no_messenger" style="opacity: 0;" data-translate="moodle_but_no_messenger">
+                This site seems to be a moodle-site, but unfortunately the <a href="https://moodle.org/plugins/local_edumessenger" target="_system">eduMessenger-Plugin</a> is not installed our outdated. Please tell your Moodle-Siteadministrator about this issue!
+            </div>
+        </div>
+    </div>
+    <div id="course" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1 data-translate="Course">Kurs</h1>
+            <!--<a href="#course-panel-right" data-role="button" data-icon="gears" data-iconpos="notext" data-translate="Submenu">Submenu</a>-->
+        </div>
+        <div role="main" class="ui-content">
+            <ul id="ul-course-forums" data-role="listview" data-split-icon="audio" data-icon="false"></ul>
+            <ul id="ul-course-structure" data-role="listview" data-icon="false"></ul>
+        </div>
+        <div data-role="panel" id="course-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="ul-course-filter" data-translate="Filter" placeholder="Filter...">
+        </div>
+    </div>
+    <div id="courses" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" onclick="UI.navigate('#mainmenu');" data-role="button" data-icon="bars" data-iconpos="notext">Menu</a>
+            <h1 data-translate="Courses">Kurse</h1>
+            <!-- <a href="#courses-panel-right" data-role="button" data-icon="gears" data-iconpos="notext" data-translate="Submenu">Submenu</a> -->
+        </div>
+        <div role="main" class="ui-content">
+            <div id="div-courses"></div>
+        </div>
+        <div data-role="panel" id="courses-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="ul-courses-filter" data-translate="Filter" placeholder="Filter...">
+
+            <ul data-role="listview" class="filter-instances checkable"></ul>
+        </div>
+    </div>
+    <div id="discussions" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1 data-translate="Discussion">Diskussion</h1>
+            <a href="#" class="btn-add-discussion" onclick="UI.navigate('#discussions-add-page');" data-role="button" data-icon="plus" data-iconpos="notext" data-translate="Add_discussion">Diskussion anlegen</a>
+            <!-- <a href="#discussions-panel-right" data-role="button" data-icon="gears" data-iconpos="notext" data-translate="Submenu">Submenu</a> -->
+        </div>
+        <div role="main" class="ui-content">
+            <span class="group-selector-wrapper">
+                <select id="discussions-group-selector" class="group-selector" style="display: none;"></select>
+            </span>
+            <ul id="ul-discussions" data-role="listview" data-filter="true" class="iconified" data-icon="false">
+                <li data-translate="loading">loading ...</li>
+            </ul>
+
+        </div>
+        <div data-role="panel" id="discussions-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header">
+                <h1 data-translate="Actions">Aktionen</h1>
+            </div>
+            <div data-role="controlgroup">
+                <a href="#" class="btn-add-discussion" onclick="UI.navigate('#discussions-add-page');" data-role="button" data-icon="plus" data-translate="Add_discussion">Diskussion anlegen</a>
+            </div>
+        </div>
+    </div>
+    <div id="discussions-add-page" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1 data-translate="Add_discussion">Diskussion anlegen</h1>
+        </div>
+        <div role="main" class="ui-content" style="height: 100%;">
+            <span class="group-selector-wrapper">
+                <select id="discussion-add-group" name="discussion-add-group" class="group-selector"></select>
+            </span>
+
+            <div>
+                <input id="discussion-add-topic" name="discussion-add-topic" onkeyup="UI.addKeyUp(event)" placeholder="Title" data-translate="Topic_title" />
+                <textarea id="discussion-add" name="discussion-add" onkeyup="UI.addKeyUp(event)" style="width: 100%; height: 100px; background-color: rgba(255,255,255,0.6);" data-role="none"></textarea>
+            </div>
+            <a href="#" id="btn-discussion-add" onclick="DISCUSSIONS.postDiscussion();" data-role="button" data-icon="plus" data-translate="Add_discussion" data-theme="b">Add Discussion</a>
+            <div>
+                <div data-role="controlgroup" data-mini="true" class="checkable">
+                    <a href="#" data-role="button" id="discussion-add-resource" name="discussion-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-translate="Attach_resource">Ressource anfügen</a>
+                    <a href="#attachments" data-role="button" data-icon="paperclip" data-translate="Attach_file">Datei anhängen</a>
+                    <a href="#markdown" data-role="button" data-icon="code">Markdown</a>
+                </div>
+            </div>
+        </div>
+        <div data-role="popup" id="popAttachResource-discussion" data-theme="b" class="ui-content popAttachResource">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+            <div style="width: 100%; height: 100%; overflow-x: scroll;">
+                <fieldset data-role="controlgroup"></fieldset>
+            </div>
+        </div>
+    </div>
+    <div id="posts" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1 data-translate="Posts">Nachrichten</h1>
+            <a href="#posts-panel-right" data-role="button" data-icon="gears" data-iconpos="notext" data-translate="Submenu">Submenu</a>
+        </div>
+        <div role="main" class="ui-content posts-add-box-">
+            <div id="div-posts" data-filter="true" data-input="#div-posts-filter"></div>
+            <div id="posts-add-box">
+                <a href="#" id="btn-post-add-expand" class="ui-btn-left expander" onclick="UI.toggleClass('#posts div[role=\'main\']', 'expanded', this, ['carat-d', 'carat-u']);" data-role="button" data-icon="carat-u" data-iconpos="notext" data-translate="Expand">Expand</a>
+                <textarea data-wrapper-class="controlgroup-textinput ui-btn" id="post-add" name="post-add" onchange="UI.addKeyUp(event)" style="background-color: rgba(255,255,255,0.6); margin-left: 40px; width: calc(100% - 90px);" data-role="none"></textarea>
+                <a href="#" id="btn-post-add" class="ui-btn-right" onclick="POSTS.postPost();" data-role="button" data-icon="plus" data-theme="b" data-iconpos="notext" data-translate="Add_post">Add Post</a>
+
+                <div class="expand-hidden" style="position: absolute; left: 0px; top: 40px; height: 100%;">
+                    <div data-role="controlgroup" style="width: 20px; margin-left: 6px;">
+                        <a href="#" data-role="button" id="post-add-resource" name="post-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-iconpos="notext" data-translate="Attach_resource">Ressource anfügen</a>
+                        <a href="#attachments" data-role="button" data-icon="paperclip" data-iconpos="notext" data-translate="Attach_file">Datei anhängen</a>
+                    </div>
+                </div>
+                <div class="expand-hidden" style="position: absolute; right: 5px; top: 40px; height: 100%;">
+                    <a href="#markdown" data-role="button" data-icon="code" data-iconpos="notext">Markdown</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="popShowProfileImage" data-role="popup" data-corners="false" class="photopopup">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right" data-translate="Close">Close</a>
+            <img src="" alt="Profile Image" />
+        </div>
+        <div id="popupImageSlide" data-overlay-theme="a" data-role="popup" data-corners="false" class="ui-show-img">
+            <a href="#" onclick="UI.navigateExternal($('#popupImageSlide').hasClass('ui-show-img') ? $('#popupImageSlide img').attr('src') : $('#popupImageSlide video').attr('src'), true);  return false;" data-role="button" data-icon="action" data-iconpos="notext" data-translate="Open" class="ui-btn-right">Open</a>
+            <video src="" alt="A video" class="prevent-swipe-global" controls preload="auto"></video>
+            <img src="" alt="An image" class="prevent-swipe-global" />
+            <a href="#" class="ui-btn-goto ui-btn-goto-left" onclick="UI.popupImageMove($('#popupImageSlide '), -1);" style="position: absolute; top: 0px; left: 0px; bottom: 0px; width: 30px; background-color: rgba(255,255,255,0.2); display: block; background-image: url(https://messenger.dibig.at/5/img/arrow-l.png); background-size: 100%; background-repeat: no-repeat; background-position: center center; -webkit-filter: drop-shadow(5px 5px 15px #222); filter: drop-shadow(5px 5px 15px #222);"></a>
+            <a href="#" class="ui-btn-goto ui-btn-goto-right" onclick="UI.popupImageMove($('#popupImageSlide '), 1);" style="position: absolute; top: 0px; right: 0px; bottom: 0px; width: 30px; background-color: rgba(255,255,255,0.2); display: block; background-image: url(https://messenger.dibig.at/5/img/arrow-r.png); background-size: 100%; background-repeat: no-repeat; background-position: center center; -webkit-filter: drop-shadow(5px 5px 15px #222); filter: drop-shadow(5px 5px 15px #222);"></a>
+        </div>
+        <div id="popupGrade" data-overlay-theme="a" data-role="popup" data-corners="false" style="min-width: 200px;">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right" data-translate="Close">Close</a>
+            <div data-role="header">
+                <h1 data-translate="Grade">Grade</h1>
+            </div>
+            <div role="main" class="ui-content">
+                <div class="grader numeric">
+                    <p class="assessed_type"></p>
+                    <label for="post-grade-slider" data-translate="Score">Score:</label>
+                    <input type="range" id="post-grade-slider" value="0" min="0" max="100" />
+                    <a href="#" onclick="POSTS.addRating();" data-icon="check" data-role="button" data-translate="Save">Save</a>
+                    <a href="#" onclick="POSTS.addRating(true);" data-icon="delete" data-theme="b" data-role="button" data-translate="Remove">Remove</a>
+                </div>
+                <div class="grader other">
+                    <p class="assessed_type"></p>
+                    <label for="post-grade-select" data-translate="Grade">Grade:</label>
+                    <select id="post-grade-select"></select>
+
+                    <a href="#" onclick="POSTS.addRating();" data-icon="check" data-role="button" data-translate="Save">Save</a>
+                    <a href="#" onclick="POSTS.addRating(true);" data-icon="delete" data-theme="b" data-role="button" data-translate="Remove">Remove</a>
+                </div>
+            </div>
+        </div>
+        <div id="popupGradeInfo" data-overlay-theme="a" data-role="popup" data-corners="false" style="min-width: 200px;">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right" data-translate="Close">Close</a>
+            <div data-role="header">
+                <h1 data-translate="Grade">Grade</h1>
+            </div>
+            <div role="main" class="ui-content">
+                <p class="assessed_type"></p>
+                <div class="grader numeric">
+                    <p data-translate="Score">Score:</p>
+                    <p class="post-grade-score"></p>
+                </div>
+                <div class="grader other">
+                    <p data-translate="Grade" style="display: none;">Grade:</p>
+                    <p class="post-grade-grade"></p>
+                </div>
+            </div>
+        </div>
+        <div data-role="panel" id="posts-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header"><h1 data-translate="Actions">Aktionen</h1></div>
+            <ul data-role="listview" data-inset="true" data-split-icon="clipboard" style="overflow: hidden;">
+                <li style="height: 50px;">
+                    <a href="#" class="link-discussions ui-btn ui-btn-icon-left ui-icon-comments-o" data-translate="Discussions">Diskussion</a>
+                </li>
+                <li style="height: 50px;">
+                    <a href="#" class="btn-appearin" style="padding: 5px 0px 0px 40px; height: 50px;"><img src="img/icon-appearin.png" alt="Appear.in" style="max-width: 40px;"/><h3 data-translate="Videochat">Videochat</h3></a>
+                    <a href="#" class="btn-clipboard btn-appearin-clipboard" data-clipboard-text="" onclick="$('#popCopied').popup('open', { positionTo: 'origin', transition: 'pop' }); setTimeout(function(){$('#popCopied').popup('close');},500);" style="height: 50px;">copy</a>
+                </li>
+                <li style="height: 50px;">
+                    <a href="#" class="btn-etherpad" style="padding: 5px 0px 0px 40px; height: 50px;"><img src="img/icon-etherpad.png" alt="Etherpad" style="max-width: 40px;"/><h3 data-translate="Etherpad">Etherpad</h3></a>
+                    <a href="#" class="btn-clipboard btn-etherpad-clipboard" data-clipboard-text="" onclick="$('#popCopied').popup('open', { positionTo: 'origin', transition: 'pop' }); setTimeout(function(){$('#popCopied').popup('close');},500);" style="height: 50px;">copy</a>
+                </li>
+            </ul>
+
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="div-posts-filter" data-translate="Filter" placeholder="Filter...">
+
+            <div data-role="header"><h1 data-translate="Discussion">Diskussion</h1></div>
+            <ul id="div-posts-meta" data-role="listview" data-inset="true" class="_collapsed" data-split-icon="info">
+                <li><a id="div-posts-course" href="#"></a><a href="#popInfoCourse" data-rel="popup" data-position-to="window"></a></li>
+                <li><a id="div-posts-forum" href="#"></a><a href="#popInfoForum" data-rel="popup" data-position-to="window"></a></li>
+                <li><a id="div-posts-discussion" href="#"></a></li>
+                <li><span id="div-posts-group"></span></li>
+            </ul>
+        </div>
+        <div data-role="popup" id="popInfoCourse" class="ui-content">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+            <p></p>
+        </div>
+        <div data-role="popup" id="popInfoForum" class="ui-content">
+            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+            <p></p>
+        </div>
+        <div data-role="popup" id="popCopied" data-translate="Copied" class="ui-content">
+            Copied
+        </div>
+    </div>
+    <div id="settings" class="cache" data-role="page">
+        <div data-role="header">
+            <a href="#" onclick="return UI.navigate('#mainmenu');" data-role="button" data-icon="bars" data-iconpos="notext">Menu</a>
+            <h1 data-translate="Profile">Profile</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <!-- <h4 data-translate="Language">Language</h4> -->
+            <p>
+                <select id="profile-language" class="language-selector" onchange="language.set(this.value);" data-iconpos="left">
+                    <option value="en">English</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </p>
+            <a href="#" onclick="return UI.navigate('#connectMoodle');" data-role="button" data-icon="exchange" data-translate="Connect">Verbinden</a>
+            <div id="sitesettings"></div>
+        </div>
+    </div>
+    <div id="stream" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" onclick="UI.navigate('#mainmenu')" data-role="button" data-icon="bars" data-iconpos="notext">Menu</a>
+            <h1 data-translate="Discussions">Discussions</h1>
+            <a href="#stream-panel-right" data-role="button" data-icon="gears" data-iconpos="notext">Menu</a>
+        </div>
+        <div role="main" class="ui-content">
+            <ul id="ul-stream" data-role="listview" data-split-icon="gear" data-split-theme="a" data-icon="false" data-filter="true" data-input="#ul-stream-filter" class="iconified">
+                <li data-translate="You_have_no_conversations" class="no-conversations">Sie haben keine Konversationen</li>
+            </ul>
+        </div>
+        <div data-role="panel" id="stream-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header"><h1 data-translate="Actions">Aktionen</h1></div>
+            <div data-role="controlgroup">
+                <a href="#" onclick="POSTS.markAsRead();" data-role="button" data-icon="plus" data-translate="Mark_all_as_read">Mark all as read</a>
+            </div>
+
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="ul-stream-filter" data-translate="Filter" placeholder="Filter...">
+
+            <ul data-role="listview" class="filter-instances checkable" data-inset="true"></ul>
+        </div>
+
+        <div data-role="panel" id="popSubmenu" data-position="right">
+            <div data-role="header"><h1 data-translate="Actions">Aktionen</h1></div>
+            <p class="course"><span class="course-title"></span></p>
+            <p class="forum"><span class="forum-title"></span></p>
+            <div data-role="controlgroup">
+                <a href="#" onclick="$('#popSubmenu').popup('close');FORUMS.markAllAsRead();" data-icon="book" data-role="button" data-translate="Mark_all_as_read">Alles gelesen</a>
+                <a href="#" onclick="UI.navigate('#members');COURSES.showMembers();" data-role="button" data-icon="group" data-translate="Members">Mitglieder</a>
+                <a href="#" onclick="$('#popSubmenu').popup('close');FORUMS.ignore();" data-icon="eye-slash" data-role="button" data-translate="Hide_this_group">Gruppe ignorieren</a>
+                <a class="isteacher" href="#" onclick="$('#popSubmenu').popup('close');COURSES.getInvitationKey();" data-icon="ticket" data-role="button" data-translate="Invite">Personen zur Gruppe einladen</a>
+                <a class="isteacher btn-import developeronly" href="#" onclick="UI.showImport();" data-role="button" data-icon="download" data-translate="Import_stuff">Importiere Inhalte</a>
+                <!-- <li><a href="#" onclick="UI.leave(1)" data-role="button">Diese Gruppe verlassen</a></li> -->
+            </div>
+        </div>
+    </div>
+    <div id="welcome" data-role="page" class="cache page-ul-gridlayout">
+        <div data-role="header" data-position="fixed">
+            <h1><span data-translate="Welcome">Willkommen</span>!</h1>
+        </div>
+        <div role="main" class="ui-content" class="splash">
+            <p>
+                <span data-translate="Which_language_do_you_speak">Welche Sprache sprichst du</span>
+                <span>?</span>
+            </p>
+            <select name="welcome-language" id="welcome-language" class="language-selector" onchange="language.set(this.value)" data-theme="b"></select>
+
+            <a href="#" onclick="return UI.navigate('#connectMoodle');" data-role="button" data-icon="check" data-translate="Proceed">Fortfahren</a>
+        </div>
+    </div>
+
+    <div id="mainmenu" class="cache" data-role="panel" data-position="left" data-display="overlay" data-theme="a" data-position-fixed="true" style="padding: 0px; opacity: 0px; display: none; border-width: 0px;">
+        <div data-role="header">
+            <img src="img/nobody.jpg" class="user-foto" />
+            <h1 style="margin-left: 40px; margin-right: 0px;">
+                <span class="user-firstname"></span>
+                <span class="user-lastname"></span>
+            </h1>
+        </div>
+        <!--<div class="user-foto image-as-background" style="position: absolute; top: 5px; left: 5px; width: 50px; height: 50px; background-size: 100% 100%; border-radius: 50%; margin-left: auto; margin-right: auto;"></div> -->
+        <div role="main">
+            <ul data-role="listview">
+                <li data-icon="comments-o"><a href="#" onclick="UI.navigate('#stream', 'mainmenu');" data-translate="Discussions">Diskussionen</a></li>
+                <li data-icon="group"><a href="#" onclick="UI.navigate('#conversations', 'mainmenu');" data-translate="Messages">Nachrichten</a></li>
+                <li data-icon="book"><a href="#" onclick="UI.navigate('#courses', 'mainmenu');" data-translate="Courses">Kurse</a></li>
+                <!-- <a href="#" onclick="if(!IUSERS.isInitialized) IUSERS.loadOrder(); UI.navigate('#contacts');" data-role="button" data-icon="group" data-translate="Contacts">Kontakte</a> -->
+                <!-- Tasks: <li data-icon="dashboard"><a href="#" onclick="UI.navigate('#pool', 'mainmenu');" data-translate="Pool">Pool</a></li> -->
+                <!-- <a href="#" onclick="UI.navigate('#instances');" data-role="button" data-icon="cloud" data-translate="Services">Dienste</a> -->
+
+                <li data-icon="smile-o"><a href="#" onclick="UI.navigate('#settings', 'mainmenu');" data-translate="Settings">Einstellungen</a></li>
+                <li data-icon="calendar"><a href="#" onclick="UI.navigate('#availability', 'mainmenu');" data-translate="Availability">Erreichbarkeit</a></li>
+                <!-- <a href="#" onclick="UI.navigate('#welcome-guide');" data-role="button" data-icon="info-circle" data-translate="Welcome_guide">App-Einführung</a> -->
+
+                <!-- <a href="#" onclick="UI.confirm(language.t('Refresh_data')+'?','DB.reset(false)');" data-role="button" data-icon="refresh" data-theme="b" data-translate="Refresh_data">Daten zurücksetzen</a> -->
+                <!-- <a href="#" onclick="UI.confirm(language.t('Disconnect_app')+'?','DB.reset(true)');" data-role="button" data-icon="sign-out" data-theme="b" data-translate="Disconnect_app">Abmelden</a> -->
+                <li data-icon="sign-out" data-theme="b"><a href="#" onclick="UI.confirm(language.t('Disconnect_app')+'?','CENTRAL.disconnectDevice()');" data-translate="Disconnect_app">Abmelden</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="conversation" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1 data-translate="Messages">Nachrichten</h1>
+            <a href="#messages-panel-right" data-role="button" data-icon="gears dashboard" data-iconpos="notext">Menu</a>
+        </div>
+        <div role="main" class="ui-content">
+            <div id="div-conversation" data-filter="true" data-input="#div-conversation-filter">
+                <div data-translate="You_have_no_conversations" class="no-conversations">Sie haben keine Konversationen</div>
+            </div>
+        </div>
+        <div data-role="panel" id="messages-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="div-conversation-filter" data-translate="Filter" placeholder="Filter...">
+        </div>
+        <div id="messages-add-box" data-role="footer" data-position="fixed">
+            <a href="#" id="btn-message-add-expand" class="ui-btn-left expander" onclick="UI.expand('#messages-add-box');" data-role="button" data-icon="carat-u" data-iconpos="notext" data-translate="Expand">Expand</a>
+            <textarea data-wrapper-class="controlgroup-textinput ui-btn" id="message-add" name="message-add" onkeyup="UI.addKeyUp(event)" style="background-color: rgba(255,255,255,0.6);" data-role="none"></textarea>
+            <a href="#" id="btn-message-add" class="ui-btn-right" onclick="CONVERSATIONS.postMessage();" data-role="button" data-icon="plus" data-theme="b" data-iconpos="notext" data-translate="Add_message">Add Message</a>
+
+            <div class="expand-hidden" style="position: absolute; left: 0px; top: 40px; height: 100%;">
+                <div data-role="controlgroup" style="width: 20px; margin-left: 6px;">
+                    <a href="#" data-role="button" id="post-add-resource" name="message-add-resource" data-icon="file-text" onclick="UI.alert(language.t('Feature_not_yet_working')); /* COURSES.showAttachResource(); */" data-iconpos="notext" data-translate="Attach_resource">Ressource anfügen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="conversations" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" onclick="UI.navigate('#mainmenu');" data-role="button" data-icon="bars" data-iconpos="notext">Menu</a>
+            <h1 data-translate="Messages">Messages</h1>
+            <a href="#chats-panel-right" data-role="button" data-icon="gears" data-iconpos="notext">Menu</a>
+        </div>
+        <div role="main" class="ui-content" style="overflow-y: scroll; -webkit-overflow-scrolling: touch;">
+            <ul id="ul-conversations" data-role="listview" data-split-icon="gear" data-split-theme="a" data-filter="true" data-input="#ul-chats-filter">
+                <li data-translate="You_have_no_conversations" class="no-conversations">Sie haben keine Konversationen</li>
+            </ul>
+        </div>
+
+        <div data-role="panel" id="chats-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+
+            <div data-role="header"><h1 data-translate="Actions">Aktionen</h1></div>
+            <div data-role="controlgroup">
+                <!--<a href="#" onclick="UI.navigate('#contacts');" data-role="button" data-icon="group" data-translate="Contacts">Kontakte</a>-->
+                <a href="#" onclick="UI.navigate('#searchContact');" data-role="button" data-icon="search" data-translate="Contact_not_found_q">Person suchen</a>
+            </div>
+
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="ul-chats-filter" data-translate="Filter" placeholder="Filter...">
+
+            <ul data-role="listview" class="filter-instances checkable">
+            </ul>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- PAGES BELOW THIS LINE WERE UNUSED IN EDM 6 -->
+
+    <div id="attachResource" data-role="page" class="popAttachResource cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1 data-translate="Attach_resource">Resource anhängen</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="searchBar">
+                <input type="text" data-type="search" id="ul-attachresource-filter" data-translate="Filter" placeholder="Filter...">
+            </div>
+            <!-- <a href="#" class="only-teacher" onclick="COURSES.showRawCourse();" data-role="button" data-icon="upload" data-translate="Upload_resource">Ressource hochladen</a> -->
+            <ul id="ul-attachresource" data-role="listview" data-input="#ul-attachresource-filter" data-split-icon="action" class="checkable">
+            </ul>
+            <!-- <fieldset data-role="controlgroup"></fieldset> -->
+        </div>
+    </div>
+
+    <div data-role="page" id="attachments" class="cache">
+        <div data-role="header">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1 data-translate="Attachments">Attachments</h1>
+            <div data-role="controlgroup" data-type="horizontal" class="ui-mini ui-btn-right">
+                <a href="#attachments" id="btn-attach-file" data-role="button" onclick="$('#attachment-file').click();" data-icon="plus" data-iconpos="notext" data-translate="Attach_file">Datei anhängen</a>
+                <a href="#attachments" data-role="button" onclick="HELPER.clearFileArea()" data-icon="delete" data-iconpos="notext" data-translate="Clear_files">Dateien löschen</a>
+            </div>
+        </div>
+        <div role="main" class="ui-content">
+            <div style="overflow: hidden;">
+                <div style="display: inline-block; padding-right: 5px; margin-right: 5px;" data-translate="Service">Instance</div>
+                <div style="display: inline-block;" class="instance-title"></div>
+            </div>
+            <div id="div-attachments-limits"></div>
+            <div style="display: none;">
+                <input type="file" multiple="multiple" id="attachment-file" onchange="HELPER.uploadFile(this);"/>
+            </div>
+            <ul id="ul-attachments-upfile" data-role="listview" data-spliticon="delete">
+                <li class="placeholder"><img src="img/tutorial-arrow-up-right.png" height="50" /></li>
+            </ul>
+        </div>
+    </div>
+    <div id="post-image" data-role="page" class="cache" data-close-btn="right">
+        <div role="main" class="ui-content">
+            <a href="#" data-role="button" data-rel="back" data-icon="back" data-iconpos="notext" style="z-index: 999;">Back</a>
+            <div class="bss-slides post-image-slideshow"></div>
+        </div>
+        <div data-role="popup" id="popShareImage" data-theme="b">
+            <ul data-role="listview" data-inset="true">
+                <li><a href="#" onclick="POSTS.shareImage('share');">Share this Item</a></li>
+                <li><a href="#" onclick="POSTS.shareImage('share-all');">Share all Items</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="pool" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" onclick="UI.navigate('#mainmenu');" data-role="button" data-icon="bars" data-iconpos="notext">Menu</a>
+            <h1 data-translate="Pool">Speicher</h1>
+            <a href="#pool-panel-right" data-role="button" data-icon="gears dashboard" data-iconpos="notext">Menu</a>
+        </div>
+        <div role="main" class="ui-content">
+            <ul id="ul-todo" data-role="listview" data-filter="true" data-input="#ul-todo-filter">
+                <li data-translate="Pool_empty" class="pool-empty">Nichts abgelegt</li>
+            </ul>
+        </div>
+        <div data-role="panel" id="pool-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="ul-todo-filter" data-translate="Filter" placeholder="Filter...">
+        </div>
+    </div>
+    <div id="contacts" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" onclick="UI.navigate('#mainmenu');" data-role="button" data-icon="bars" data-iconpos="notext">Menu</a>
+            <h1 data-translate="Contacts">Kontakte</h1>
+            <a href="#contacts-panel-right" data-role="button" data-icon="gears dashboard" data-iconpos="notext">Menu</a>
+        </div>
+        <div role="main" class="ui-content">
+            <ul id="ul-contacts" data-role="listview" data-autodividers="true" data-filter="true" data-input="#ul-contacts-filter" data-split-icon="envelope" data-split-theme="a">
+                <li data-translate="loading" class="initial">loading ...</li>
+            </ul>
+            <br />&nbsp;<br />&nbsp;
+        </div>
+        <div data-role="panel" id="contacts-panel-right" data-position="right" data-display="overlay" data-position-fixed="true">
+            <div data-role="header"><h1 data-translate="Actions">Aktionen</h1></div>
+            <div data-role="controlgroup">
+                <a href="#" onclick="UI.navigate('#searchContact');" data-role="button" data-icon="search" data-translate="Contact_not_found_q">Kontakt nicht aufgelistet?</a>
+            </div>
+
+            <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
+            <input type="text" data-type="search" id="ul-contacts-filter" data-translate="Filter" placeholder="Filter...">
+
+            <ul data-role="listview" class="filter-instances checkable"></ul>
+        </div>
+    </div>
+
+
+    <div id="members" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-transition="slidefade" data-translate="Back">Back</a>
+            <h1 data-translate="Members">Mitglieder</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="searchBar">
+                <input type="text" data-type="search" id="ul-members-filter" data-translate="Filter" placeholder="Filter...">
+            </div>
+            <ul id="ul-members" data-role="listview" data-filter="true" data-input="#ul-members-filter" data-split-icon="delete">
+            </ul>
+        </div>
+        <div data-role="popup" id="popInstanceRemoveUser" class="ui-content" data-theme="b">
+            <p><span class="member"></span> <span data-translate="Really_remove">wirklich aus Gruppe entfernen</span>?</p>
+            <a href="#" class="remove" data-role="button" data-icon="ban" data-theme="b" data-translate="Remove">Entfernen</a>
+            <a href="#" data-rel="back" data-role="button" data-icon="delete" data-translate="Abort">Abbrechen</a>
+        </div>
+        <div data-role="popup" id="popInstanceRemoveCourse" class="ui-content" data-theme="b">
+            <p data-translate="Remove_group_last_teacher">Sie sind die letzte Lehrkraft in der Gruppe. Wenn Sie austreten, wird die ganze Gruppe <strong>unwiederbringlich</strong> gelöscht!</p>
+            <p><span data-translate="Really_remove_group">Gruppe wirklich löschen</span>?</p>
+            <a href="#" class="remove" data-role="button" data-icon="delete" data-theme="b" data-translate="Remove_group">Gruppe löschen</a>
+            <a href="#" data-rel="back" data-role="button" data-icon="delete" data-translate="Abort">Abbrechen</a>
+        </div>
+    </div>
+    <div id="searchContact" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-transition="slidefade" data-translate="Back">Back</a>
+            <h1 data-translate="Search_contact">Suche nach Kontakt</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="ui-field-contain">
+                <label for="search-contact-instance" data-translate="Service">Dienst</label>
+                <select class="instance-selector active" name="search-contact-instance" id="search-contact-instance"><option value="0" data-translate="Default">Default</option></select>
+            </div>
+            <div class="ui-field-contain">
+                <label for="search-contact-criteria-value" data-translate="Search_value">Suchwert</label>
+                <input name="search-contact-criteria-value" id="search-contact-criteria-value" />
+            </div>
+            <div class="ui-field-contain">
+                <a href="#" onclick="INSTANCES.searchUser($('#search-contact-instance').val(), $('#search-contact-criteria-value').val());" data-role="button" data-icon="search" data-translate="Search_now">Suche durchführen</a>
+            </div>
+            <ul id="ul-contact-search" data-role="listview" data-autodividers="true">
+            </ul>
+        </div>
+    </div>
+    <div id="welcome-guide" data-role="page" class="cache">
+        <div role="main" class="ui-content">
+            <div class="bss-slides" style="bottom: 30px;">
+                <figure>
+                    <div data-role="header">
+                        <h1 data-translate="Welcome_guide"></h1>
+                    </div>
+                    <table border="0" style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="smile-o" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_profile"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="comments-o" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_chats"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="book" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_courses"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="group" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_contacts"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="cloud" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_instances"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="welcome-guide-page-indicator"></div>
+                </figure>
+                <figure>
+                    <div data-role="header">
+                        <h1 data-translate="Profile"></h1>
+                    </div>
+                    <table border="0" style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="smile-o" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_profile"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <p data-translate="About_profile_long"></p>
+                    <div style="text-align: center;"><img src="img/welcome/availability.png" /></div>
+                    <div class="welcome-guide-page-indicator"></div>
+                </figure>
+                <figure>
+                    <div data-role="header">
+                        <h1 data-translate="Chats"></h1>
+                    </div>
+                    <table border="0" style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="comments-o" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_chats"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <p data-translate="About_chats_long"></p>
+                    <div class="welcome-guide-page-indicator"></div>
+                </figure>
+                <figure>
+                    <div data-role="header">
+                        <h1 data-translate="Courses"></h1>
+                    </div>
+                    <table border="0" style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="book" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_courses"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <p data-translate="About_courses_long"></p>
+                    <div style="text-align: center;"><img src="img/welcome/courses.png" /></div>
+                    <div class="welcome-guide-page-indicator"></div>
+                </figure>
+                <figure>
+                    <div data-role="header">
+                        <h1 data-translate="Contacts"></h1>
+                    </div>
+                    <table border="0" style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="group" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_contacts"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <p data-translate="About_contacts_long"></p>
+                    <div style="text-align: center;"><img src="img/welcome/contacts.png" /></div>
+                    <div class="welcome-guide-page-indicator"></div>
+                </figure>
+                <figure>
+                    <div data-role="header">
+                        <h1 data-translate="Services"></h1>
+                    </div>
+                    <table border="0" style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" data-role="button" data-icon="cloud" data-iconpos="notext"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_instances"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <p data-translate="About_instances_long"></p>
+                    <div style="text-align: center;"><img src="img/welcome/instances.png" /></div>
+                    <div class="welcome-guide-page-indicator"></div>
+                </figure>
+                <figure data-theme="b" class="lastpage">
+                    <div data-role="header" data-theme="a">
+                        <h1 data-translate="About_choose_to_start"></h1>
+                    </div>
+                    <table border="0" style="margin-left: auto; margin-right: auto;">
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" onclick="UI.navigate('#availability');" data-role="button" data-icon="calendar" data-iconpos="notext" class="guide-circle-shine"></a>
+                            </td>
+                            <td>
+                                <p data-translate="Availability"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" onclick="UI.navigate('#profile');" data-role="button" data-icon="smile-o" data-iconpos="notext" class="guide-circle-shine"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_profile"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" onclick="UI.navigate('#stream');" data-role="button" data-icon="comments-o" data-iconpos="notext" class="guide-circle-shine"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_chats"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" onclick="UI.navigate('#courses');" data-role="button" data-icon="book" data-iconpos="notext" class="guide-circle-shine"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_courses"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" onclick="UI.navigate('#contacts');" data-role="button" data-icon="group" data-iconpos="notext" class="guide-circle-shine"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_contacts"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50" align="center">
+                                <a href="#" onclick="UI.navigate('#instances');" data-role="button" data-icon="cloud" data-iconpos="notext" class="guide-circle-shine"></a>
+                            </td>
+                            <td>
+                                <p data-translate="About_instances"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="welcome-guide-page-indicator"></div>
+                </figure>
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <h1>&nbsp;</h1>
+            <a href="#" onclick="$('#welcome-guide .bss-slides figure').removeClass('bss-show');$('#welcome-guide .bss-slides figure.lastpage').addClass('bss-show');" data-icon="gears" data-translate="Skip" class="ui-btn-right" style="margin-top: 0px;">Überspringen</a>
+        </div>
+    </div>
+    <div id="terms_of_use" data-role="page" class="cache">
+        <div data-role="header" data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-transition="slidefade" data-translate="Back">Back</a>
+            <h1>Terms of Use</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <p>Lastupdated: 18th June, 2016</p>
+            <p>Please read these Terms of Use carefully before using eduMessenger (App or Webservice) operated by Digitale Bildungsgesellschaft (referred to as "DIBIG")</p>
+            <p>     Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms.
+                These Terms apply to all visitors, users and others who access or use the Service.
+                By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the
+                terms then you may not access the Service.
+            </p>
+            <h2>Termination</h2>
+            <p>
+                We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason
+                whatsoever, including without limitation if you breach the Terms. All provisions of the Terms which by their nature
+                should survive termination shall survive termination, including, without limitation, ownership provisions, warranty
+                disclaimers, indemnity and limitations of liability.
+            </p>
+            <h2>Links external Sources</h2>
+            <p>
+                Our Service may contain links to third­party web sites, contents or services that are not owned or controlled by DIBIG.
+                DIBIG has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third
+                party web sites, contents or services. You further acknowledge and agree that DIBIG shall not be responsible or liable,
+                directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance
+                on any such content, goods or services available on or through any such web sites or services.
+            </p>
+            <p>
+                We strongly advise you to read the terms and conditions and privacy policies of any third­party web sites or services
+                that you visit.
+            </p>
+            <h2>Governing Law</h2>
+            <p>
+                These Terms shall be governed and construed in accordance with the laws of Austria, without regard to its conflict of
+                law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
+                If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms
+                will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and
+                replace any prior agreements we might have between us regarding the Service.
+            </p>
+            <h2>Changes</h2>
+            <p>
+                We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material
+                we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change
+                will be determined at our sole discretion.
+            </p>
+            <p>
+                By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised
+                terms. If you do not agree to the new terms, please stop using the Service.
+            </p>
+            <h2>Contact Us</h2>
+            <p>
+                If you have any questions about these Terms, please contact us at <a href="mailto:office@dibig.at">office@dibig.at</a>.
+            </p>
+        </div>
+    </div>
+    <div id="eula" data-role="page" class="cache">
+        <div data-role="header"  data-position="fixed">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Back</a>
+            <h1>End User Licence Agreement (EULA)</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <p><strong>IMPORTANT, PLEASE READ CAREFULLY. THIS IS A LICENSE AGREEMENT</strong></p>
+            <p>
+                If not stated otherwise, this SOFTWARE PRODUCT is protected by copyright laws and international copyright treaties,
+                as well as other intellectual property laws and treaties. This SOFTWARE PRODUCT is licensed, not sold.
+                End User License Agreement This End User License Agreement ("EULA") is a legal agreement between you
+                (either an individual or a single entity) and Digitale Bildungsgesellschaft (referred to as DIBIG) with regard
+                to the copyrighted Software (herein referred to as "SOFTWARE PRODUCT" or "SOFTWARE") provided with this EULA.
+            </p>
+            <p>
+                The SOFTWARE PRODUCT includes computer software, the associated media, any printed materials, and any "online" or
+                electronic documentation. Use of any software and related documentation ("Software") provided to you by DIBIG in
+                whatever form or media, will constitute your acceptance of these terms, unless separate terms are provided by
+                the software supplier, in which case certain additional or different terms may apply. If you do not agree with
+                the terms of this EULA, do not download, install, copy or use the Software. By installing, copying or otherwise
+                using the SOFTWARE PRODUCT, you agree to be bound by the terms of this EULA. If you do not agree to the terms of
+                this EULA, DIBIG is unwilling to license the SOFTWARE PRODUCT to you.
+            </p>
+            <h2>1. Eligible Licensees</h2>
+            <p>
+                This Software is available for license solely to SOFTWARE owners, with no right of duplication or further distribution,
+                licensing, or sub-licensing. IF YOU DO NOT OWN THE SOFTWARE, THEN DO NOT DOWNLOAD, INSTALL, COPY OR USE THE SOFTWARE.
+            </p>
+            <h2>2. License Grant</h2>
+            <p>
+                DIBIG grants to you a personal, non-transferable and non-exclusive right to use the copy of the Software provided with
+                this EULA. You agree you will not copy the Software except as necessary to use it on a single computer. You agree
+                that you may not copy the written materials accompanying the Software. Modifying, translating, renting, copying,
+                transferring or assigning all or part of the Software, or any rights granted hereunder, to any other persons and
+                removing any proprietary notices, labels or marks from the Software is strictly prohibited. Furthermore, you hereby
+                agree not to create derivative works based on the Software. You may not transfer this Software.
+            </p>
+            <h2>3. Copyright</h2>
+            <p>
+                The Software is licensed, not sold. You acknowledge that no title to the intellectual property in the Software is
+                transferred to you. You further acknowledge that title and full ownership rights to the Software will remain the
+                exclusive property of DIBIG and/or its suppliers, and you will not acquire any rights to the Software, except as
+                expressly set forth above. All copies of the Software will contain the same proprietary notices as contained in
+                or on the Software. All title and copyrights in and to the SOFTWARE PRODUCT (including but not limited to any
+                images, photographs, animations, video, audio, music, text and "applets," incorporated into the SOFTWARE PRODUCT),
+                the accompanying printed materials, and any copies of the SOFTWARE PRODUCT, are owned by DIBIG or its suppliers.
+                The SOFTWARE PRODUCT is protected by copyright laws and international treaty provisions. You may not copy the
+                printed materials accompanying the SOFTWARE PRODUCT.
+            </p>
+            <h2>4. Reverse Engineering</h2>
+            <p>
+                You agree that you will not attempt, and if you are a corporation, you will use your best efforts to prevent your
+                employees and contractors from attempting to reverse compile, modify, translate or disassemble the Software in
+                whole or in part. Any failure to comply with the above or any other terms and conditions contained herein will
+                result in the automatic termination of this license and the reversion of the rights granted hereunder to DIBIG.
+            </p>
+            <h2>5. Disclaimer of Warranty</h2>
+            <p>
+                The Software is provided "AS IS" without warranty of any kind. DIBIG and its suppliers disclaim and make no express
+                or implied warranties and specifically disclaim the warranties of merchantability, fitness for a particular purpose
+                and non-infringement of third-party rights. The entire risk as to the quality and performance of the Software is
+                with you. Neither DIBIG nor its suppliers warrant that the functions contained in the Software will meet your
+                requirements or that the operation of the Software will be uninterrupted or error-free.
+            </p>
+            <p>
+                DIBIG IS NOT OBLIGATED TO PROVIDE ANY UPDATES TO THE SOFTWARE.
+            </p>
+            <h2>6. Limitation of Liability</h2>
+            <p>
+                DIBIG's entire liability and your exclusive remedy under this EULA shall not exceed the price paid for the Software, if any.
+                In no event shall DIBIG or its suppliers be liable to you for any consequential, special, incidental or indirect damages of
+                any kind arising out of the use or inability to use the software, even if DIBIG or its supplier has been advised
+                of the possibility of such damages, or any claim by a third party. 7. Rental. You may not loan, rent, or lease the SOFTWARE.
+            </p>
+            <h2>8. Upgrades</h2>
+            <p>
+                If the SOFTWARE is an upgrade from an earlier release or previously released version, you now may use that upgraded product
+                only in accordance with this EULA. If the SOFTWARE PRODUCT is an upgrade of a software program which you licensed as a
+                single product, the SOFTWARE PRODUCT may be used only as part of that single product package and may not be separated
+                for use on more than one computer.
+            </p>
+            <h2>9. OEM Product Support</h2>
+            <p>
+                Product support for the SOFTWARE PRODUCT IS provided by DIBIG. For product support, please contact DIBIG. Should you have
+                any questions concerning this, please refer to the address provided in the documentation.
+            </p>
+            <h2>10. No Liability for Consequential Damages</h2>
+            <p>
+                In no event shall DIBIG or its suppliers be liable for any damages whatsoever (including, without limitation, incidental,
+                direct, indirect special and consequential damages, damages for loss of business profits, business interruption, loss of
+                business information, or other pecuniary loss) arising out of the use or inability to use this "Your Company" product,
+                even if DIBIG has been advised of the possibility of such damages. Because some states/countries do not allow the exclusion
+                or limitation of liability for consequential or incidental damages, the above limitation may not apply to you.
+            </p>
+            <h2>11. Indemnification By You</h2>
+            <p>
+                If you distribute the Software in violation of this Agreement, you agree to indemnify, hold harmless and defend DIBIG and
+                its suppliers from and against any claims or lawsuits, including attorney's fees that arise or result from the use or
+                distribution of the Software in violation of this Agreement.
+            </p>
+            <p>
+                Digitale Bildungsgesellschaft [DIBIG]<br />
+                <a href="#" onclick="window.open('http://www.dibig.at','_blank');">http://www.dibig.at</a><br />
+                <a href="mailto:office@dibig.at">office@dibig.at</a><br />
+                AUSTRIA
+            </p>
+        </div>
+    </div>
+    <div data-role="page" id="log" class="cache">
+        <div data-role="header">
+            <a href="#" data-rel="back" data-icon="back" data-iconpos="notext" data-translate="Back">Zurück</a>
+            <h1>LOG</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <div class="searchBar">
+                <input type="text" data-type="search" id="cont-log-filter" data-translate="Filter" placeholder="Filter...">
+            </div>
+            <a href="#" onclick="localStorage.setItem('console2html','yes');UI.alert('Logging enabled');" data-role="button" data-icon="check">Enable Log</a>
+            <a href="#" onclick="localStorage.removeItem('console2html');UI.alert('Logging disabled');" data-role="button" data-icon="delete">Disable Log</a>
+            <a href="#" data-role="button" onclick="console.print();" data-icon="print">Print Log</a>
+
+            <a href="#" data-role="button" onclick="UI.shareLog();" data-icon="action">Send Log</a>
+            <hr />
+            <div id="cont-log" data-filter="true" data-input="#cont-log-filter">
+            </div>
+        </div>
+    </div>
+
+    <div data-role="page" class="cache" id="mydata">
+        <div data-role="header">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Back</a>
+            <h1 data-translate="My_data">My_data</h1>
+        </div>
+        <div role="content" class="ui-content">
+            <p data-translate="My_data_text">On this page we show you everything that we stored in our database about you.</p>
+            <div class="mydata-container">
+                <a href="#" onclick="USER.loadMyData();" data-role="button" data-icon="recycle" data-translate="Fetch">Fetch</a>
+            </div>
+        </div>
+    </div>
+    <div data-role="page" class="cache" id="reset">
+        <div data-role="header">
+            <h1 data-translate="Data_cleared">Data cleared</h1>
+        </div>
+        <div role="content" class="ui-content">
+            <p data-translate="Please_restart_app">Please restart app, if it does not work automatically!</p>
+            <img src="https://messenger.dibig.at/5/img/data-cleared-hd.jpg" style="width: 80%; margin-left: auto; margin-right: auto;" />
+        </div>
+    </div>
+    <div data-role="page" class="cache" id="markdown">
+        <div data-role="header">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Back</a>
+            <h1 data-translate="Markdown_format">Markdown Format</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <p>
+                <span data-translate="Markdown_description">
+                    You can use the markdown format to enhance your texts.
+                    A complete description of all fatures is available on
+                </span>
+                <a href="https://docs.moodle.org/34/en/Markdown" target="_blank">Moodle-Website</a>
+            </p>
+
+            <h3 data-translate="Markdown_emphasise">Emphasising Text</h3>
+            <p class="code">*italic*
+                **bold**
+                ***bold italic***
+            </p>
+
+            <h3 data-translate="Markdown_headings">Headings</h3>
+            <p class="code"># section heading
+                ## sub-section heading
+                ### sub-sub-section heading
+            </p>
+
+            <h3 data-translate="Markdown_bullets">Bullet points</h3>
+            <p class="code">* first point
+                * second point
+                * third point
+            </p>
+
+            <h3 data-translate="Markdown_numbering">Numbered lists</h3>
+            <p class="code">1. first point
+                2. second point
+                3. third point
+            </p>
+
+            <h3 data-translate="Markdown_list_indented">Indented lists</h3>
+            <p class="code">* top level bullet one
+                &nbsp;&nbsp;* sub-bullet
+                &nbsp;&nbsp;* sub-bullet 2
+                * top level bullet two
+                1. numbered point one
+                &nbsp;&nbsp;1. nested numbered point
+                2. numbered point two
+            </p>
+        </div>
+    </div>
+    <div id="infoUpdate" class="hidden cache">
+        <div>&nbsp;</div>
+        <a href="#btnUpdate">!</a>
+    </div>
+    <div id="btnUpdate" data-role="page" class="cache">
+        <div data-role="header">
+            <a href="#" data-rel="back" data-role="button" data-icon="back" data-iconpos="notext" data-translate="Back">Back</a>
+            <h1 data-translate="Update">Update</h1>
+        </div>
+        <div role="main" class="ui-content">
+            <p data-translate="Update_info">
+                We improved eduMessenger and provided a hot-upgrade for this app. It is advised
+                perform the update as soon as possible. If you are in the middle of writing something, you
+                can finish your work before.
+            </p>
+            <a href="#" onclick="top.location.reload();" data-role="button" data-icon="refresh" data-translate="Update_now">Update now</a>
+            <a href="#" onclick="$('#infoUpdate').addClass('hidden'); window.history.go(-1);" data-role="button" data-icon="eye" data-translate="Update_hide">Hide Info</a>
+        </div>
+    </div>
+
+
+    <div id="btn-error" class="hidden cache">
+        <a href="#" onclick="$('#error').toggleClass('hidden');" data-role="button" data-icon="info" data-iconpos="notext">Error</a>
+    </div>
+    <div id="error" class="hidden cache">
+
+    </div>
+
+
+
+</body>
+<script src="cordova.js"></script>
+</html>
