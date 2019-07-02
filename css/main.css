@@ -34,14 +34,22 @@
  * jQuery Mobile fix: Fixed headers overlay content. We prevent this.
  */
 div[data-role="page"] {
-    padding-top: 44px !important;
+    /* padding-top: 44px !important; */
 }
 div[data-role="page"]
     > div[data-role="header"][data-position="fixed"]
-    + div[role="main"] {
+    + div[role="main"],
+div[data-role="page"]
+    > div[data-role="header"][data-position="fixed"]
+    + .ui-panel-wrapper>div[role="main"] {
     position: absolute;
     top: 44px; right: 0; bottom: 0; left: 0;
     padding-top: 0;
+}
+div[data-role="page"]
+    > div[data-role="header"][data-position="fixed"]
+    + .ui-panel-wrapper>div[role="main"] {
+    padding-top: 10px;
 }
 div[data-role="page"]
     > div[data-role="header"][data-position="fixed"]

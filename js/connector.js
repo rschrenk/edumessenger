@@ -179,6 +179,16 @@ var CONNECTOR = {
                 MOODLE.siteActive(site, false);
                 return;
             }
+            if (o.data.act == 'create_message') {
+                $('#message-add').removeAttr('disabled');
+                if (typeof o.result.message !== 'undefined') {
+                    CONVERSATIONS.storeMessages(site, [o.result.message]);
+                    $('#message-add').val('');
+                }
+                if (typeof o.result.error !== 'undefined') {
+                    UI.alert(o.result.error);
+                }
+            }
             if (o.data.act == 'get_conversation_messages') {
                 if (typeof o.result.messages !== 'undefined') {
                     CONVERSATIONS.storeMessages(site, o.result.messages);
@@ -289,6 +299,7 @@ var CONNECTOR = {
                     MOODLE.siteMyData(o.data.site);
                     MOODLE.getCourses(o.data.site);
                     POSTS.loadStream(o.data.site.hash, undefined, undefined, undefined, 'DESC');
+                    CONVERSATIONS.getConversations(o.data.site);
                     var sites = DB.getConfig('sites', {});
                     var firstsite = Object.keys(sites).length === 0;
                     if (firstsite) {

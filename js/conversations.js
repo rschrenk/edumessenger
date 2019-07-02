@@ -11,10 +11,42 @@ var CONVERSATIONS = {
         return $('#conversations').attr('data-sitehash') == sitehash && $('#conversations').attr('data-conversationid') == conversationid;
     },
     /**
+     * Posts a message to a conversation.
+     */
+    createMessage: function(){
+        var sitehash = +$('#conversations').attr('data-sitehash');
+        var conversationid = +$('#conversations').attr('data-conversationid');
+        var site = MOODLE.siteGet(sitehash);
+        var sites = DB.getConfig('sites');
+        console.log(sites);
+        if (typeof site === 'undefined' || typeof site.userid === 'undefined') {
+            console.error('We do not have such a site with hash ', sitehash);
+            return;
+        }
+        if (conversationid == 0) {
+            console.error('No conversation id given');
+            return;
+        }
+        var message = $('#conversation #message-add').val();
+        CONNECTOR.schedule({
+            data: {
+                act: 'create_message',
+                conversationid: conversationid,
+                message: message,
+                messageformat: 1, //html
+                touserid: +$('#conversation').attr('data-firstuserid'), // Only required before Moodle 3.6
+            },
+            identifier: 'create_message_' + site.hash + '_' + conversationid + '_' + (new Date()).getTime(),
+            site: site,
+        }, true);
+        $('#conversation #message-add').attr('disabled', 'disabled');
+    },
+    /**
      * Retrieve active conversations of a user.
      * @param site site object or wwwroot
      * @param userid only used when site is given as wwwroot
      */
+    /* @todo since timestamp */
     getConversations: function(site, userid) {
         // Check if we get site from wwwroot
         if (typeof site === 'string') { site = MOODLE.siteGet(site, userid); }
@@ -24,7 +56,7 @@ var CONVERSATIONS = {
             data: {
                 act: 'get_conversations',
             },
-            identifier: 'get_conversations_' + site.sitehash,
+            identifier: 'get_conversations_' + site.hash,
             site: site,
         }, true);
     },
@@ -39,15 +71,27 @@ var CONVERSATIONS = {
         if (typeof site === 'string') { site = MOODLE.siteGet(site, userid); }
         if (CONVERSATIONS.debug > 3) console.log('CONVERSATIONS.load(site, userid, conversationid)', site, userid, conversationid);
 
-        CONNECTOR.schedule({
-            data: {
-                act: 'get_conversation_messages',
-                conversationid: conversationid,
-            },
-            identifier: 'get_conversation_messages_' + site.hash + '_' + conversationid,
-            site: site,
-        }, true);
+        var range = IDBKeyRange.bound([site.hash, conversationid, 0], [site.hash, conversationid, LIB.k9]);
+        app.db.transaction('messages', 'readonly').objectStore('messages').index('sitehash_conversationid_modified').get(range, 'prev').onsuccess = function(event) {
+            var lastmodified = 0;
+            if (event.target.result) {
+                // We have a message and take its timestamp.
+                lastmodified = event.target.result.modified;
+            }
+            CONNECTOR.schedule({
+                data: {
+                    act: 'get_conversation_messages',
+                    conversationid: conversationid,
+                    lastmodified: lastmodified
+                },
+                identifier: 'get_conversation_messages_' + site.hash + '_' + conversationid,
+                site: site,
+            }, true);
+        };
     },
+    /**
+     * List the contents of a particular conversation.
+     */
     list: function(sitehash, conversationid, navigate) {
         navigate = navigate || false;
         if (CONVERSATIONS.debug > 0) { console.log('CONVERSATIONS.list(sitehash, conversationid, navigate)', sitehash, conversationid, navigate); }
@@ -65,14 +109,29 @@ var CONVERSATIONS = {
         var index = 'sitehash_conversationid_modified';
         var range = IDBKeyRange.bound([sitehash, conversationid, 0], [sitehash, conversationid, LIB.k9]);
 
+        // This is for moodle 3.5 and earlier. We can not post to a conversation, we need to post to a user.
+        // For these moodle-versions we can only have 1 recipient, therefore we choose the first one from the conversation.
+        app.db.transaction('conversations', 'readonly').objectStore('conversations').get([sitehash, conversationid]).onsuccess = function(event) {
+            var conversation = event.target.result;
+            if (typeof conversation.members !== 'undefined') {
+                Object.keys(conversation.members).forEach(function(id) {
+                    var memberid = conversation.members[id].userid;
+                    if (memberid != site.userid) {
+                        $('#conversation').attr('data-firstuserid', memberid);
+                    }
+                });
+            } else {
+                $('#conversation').attr('data-firstuserid', 0);
+            }
+        }
+
         LIB.coloringStart();
         app.db.transaction('messages', 'readonly').objectStore('messages').index(index).openCursor(range).onsuccess = function(event){
             var cursor = event.target.result;
             if (cursor) {
                 var message = cursor.value;
-                console.log(message);
+                if (CONVERSATIONS.debug > 10) console.log(message);
                 var userpictureurl = !empty(message.userpictureurl) ? MOODLE.enhanceURL(site, message.userpictureurl) : '';
-
                 var divP = $(div).find('.site-' + site.hash + '.message-' + message.messageid);
                 if (divP.length == 0) {
                     divP = $('<div>').append([
@@ -144,9 +203,8 @@ var CONVERSATIONS = {
                 blocker[message.sitehash][message.conversationid] = true;
 
                 var site = MOODLE.siteGet(message.sitehash);
-                var userpictureurl = !empty(message.userpictureurl) ? MOODLE.enhanceURL(site, message.userpictureurl) : '';
 
-                var li = $(ul).children('.sitehash-' + message.sitehash + '.conversation-' + message.conversationid);
+                var li = $(ul).children('.sitewwwroot-' + site.wwwroot.hashCode() + '.conversation-' + message.conversationid);
                 if (li.length === 0) {
                     li = $('<li>').append([
                         $('<a>').append([
@@ -159,8 +217,8 @@ var CONVERSATIONS = {
                             $('<p class="message">'),
                             $('<span class="ui-li-count datetime">'),
                         ]).attr('href', '#').attr('onclick', 'CONVERSATIONS.show("' + site.wwwroot + '", undefined, ' + message.conversationid + ', 1);'),
-                    ]).addClass('sitehash-' + message.sitehash)
-                      .addClass('conversation-' + message.conversatinonid)
+                    ]).addClass('sitewwwroot-' + site.wwwroot.hashCode())
+                      .addClass('conversation-' + message.conversationid)
                       .attr('data-modified', message.modified);
                     if (typeof predecessor === 'undefined') {
                         ul.append(li);
@@ -173,11 +231,11 @@ var CONVERSATIONS = {
                 }
                 predecessor = li;
                 li.removeClass('flag-removable');
-                $(li).find('.userpicture').attr('src', userpictureurl).attr('alt', message.userfullname || language.t('Unknown'));
+                //$(li).find('.userpicture').attr('src', userpictureurl).attr('alt', message.userfullname || language.t('Unknown'));
                 $(li).find('.message').html(LIB.stripHTML(message.fullmessagehtml));
-                $(li).find('.author').html(message.userfullname);
+                //$(li).find('.author').html(message.userfullname);
                 $(li).find('.datetime').html(UI.ts2time(message.timecreated, 'verbal'));
-
+                CONVERSATIONS.listStreamUser(li, site, message);
                 cursor.continue();
             } else {
                 if (navigate) {
@@ -203,6 +261,71 @@ var CONVERSATIONS = {
                 }
             }
         };
+    },
+    /**
+     * Load the user(s) of this conversation.
+     */
+    listStreamUser: function(li, site, message) {
+        if (CONVERSATIONS.debug > 3) console.log('CONVERSATIONS.listStreamUser(li, site, message)', li, site, message);
+        //var userpictureurl = !empty(message.userpictureurl) ? MOODLE.enhanceURL(site, message.userpictureurl) : '';
+        //$(li).find('.userpicture').attr('src', userpictureurl).attr('alt', message.userfullname || language.t('Unknown'));
+        //$(li).find('.author').html(message.userfullname);
+
+        // New behavior: load all users from conversation
+        if (CONVERSATIONS.debug > 5) console.log('NEW BEHAVIOR');
+        app.db.transaction('conversations', 'readonly').objectStore('conversations').index('wwwroot_conversationid').get([site.wwwroot, message.conversationid]).onsuccess = function(event) {
+            if (event.target) {
+                var conversation = event.target.result;
+                var allmembers = conversation.members;
+                var excludesites = MOODLE.siteGet(site.wwwroot, -1);
+                var othermembers = [];
+                Object.keys(allmembers).forEach(function(id) {
+                    var user = allmembers[id];
+                    var found = false;
+                    Object.keys(excludesites).forEach(function(sk) {
+                        if (excludesites[sk].userid == user.userid) {
+                            found = true;
+                        }
+                    });
+                    if (!found) {
+                        othermembers[othermembers.length] = user;
+                    }
+                });
+                if (CONVERSATIONS.debug > 5) console.log(othermembers);
+                // Now fill the contacts.
+                if (othermembers.length == 1) {
+                    // Show only the other
+                    userpictureurl = !empty(othermembers[0].userpictureurl) ? MOODLE.enhanceURL(site, othermembers[0].userpictureurl) : '';
+                    $(li).find('.userpicture').attr('src', userpictureurl).attr('alt', othermembers[0].userfullname || language.t('Unknown'));
+                    $(li).find('.author').html(othermembers[0].userfullname);
+                }
+                if (othermembers.length == 2) {
+                    // Split by half
+                    var pictureurls = [
+                        !empty(othermembers[0].userpictureurl) ? MOODLE.enhanceURL(site, othermembers[0].userpictureurl) : '',
+                        !empty(othermembers[1].userpictureurl) ? MOODLE.enhanceURL(site, othermembers[1].userpictureurl) : '',
+                    ];
+                    $(li)
+                        .find('.userpicture').attr('src', '').attr('alt', othermembers[0].userfullname + " & " + othermembers[1].userfullname)
+                        .css('background', "url('" + pictureurls[0] + "') left no-repeat, url('" + pictureurls[1] + "') right no-repeat")
+                        .css('background-size', "50%, 50%");
+
+                    $(li).find('.author').html(othermembers[0].userfullname + " & " + othermembers[1].userfullname);
+                }
+                if (othermembers.length == 3) {
+                    // First one half, others quarter
+                    userpictureurl = !empty(othermembers[0].userpictureurl) ? MOODLE.enhanceURL(site, othermembers[0].userpictureurl) : '';
+                    $(li).find('.userpicture').attr('src', userpictureurl).attr('alt', othermembers[0].userfullname || language.t('Unknown'));
+                    $(li).find('.author').html(othermembers[0].userfullname);
+                }
+                if (othermembers.length > 3) {
+                    // First 4 quarter
+                    userpictureurl = !empty(othermembers[0].userpictureurl) ? MOODLE.enhanceURL(site, othermembers[0].userpictureurl) : '';
+                    $(li).find('.userpicture').attr('src', userpictureurl).attr('alt', othermembers[0].userfullname || language.t('Unknown'));
+                    $(li).find('.author').html(othermembers[0].userfullname);
+                }
+            }
+        }
     },
     /**
      * Show a conversation. Checks if multiple accounts could access it.
@@ -258,6 +381,7 @@ var CONVERSATIONS = {
                     }
                     if (options.length == 0) {
                         console.log('Found no possible source - how is that going???');
+                        Object.keys(possiblesites).forEach(function(id){ CONVERSATIONS.getConversations(possiblesites[id]); });
                     } else if (options.length == 1) {
                         CONVERSATIONS.show($(options[0]).attr('wwwroot'), accessusers[0], conversationid, navigate);
                     } else {
@@ -311,12 +435,14 @@ var CONVERSATIONS = {
         // Determine if this conversation is currently viewed.
         var sites = DB.getConfig('sites');
         var sitehash = $('#conversations').attr('data-sitehash');
-        var wwwroot = sites.hashcodes[sitehash].wwwroot;
-        var conversationid = $('#conversations').attr('data-conversationid');
-        var userid = $('#conversations').attr('data-userid');
+        var wwwroot = sites.hashcodes[site.hash].wwwroot;
+        var conversationid = +$('#conversations').attr('data-conversationid');
+        var userid = +$('#conversations').attr('data-userid');
+        console.log(sitehash, wwwroot, conversationid, userid);
         if (wwwroot != '' && conversationid > 0 && userid > 0) {
             // This short timeout is necessary to let the last database finish the last put.
-            setTimeout(100, function() { CONVERSATIONS.show(wwwroot, userid, conversationid, false); });
+            if (CONVERSATIONS.debug > 3) console.log('Reloading this conversations view in 100ms');
+            setTimeout(function() { CONVERSATIONS.show(wwwroot, userid, conversationid, false); }, 100);
         }
     },
     /**
@@ -331,7 +457,6 @@ var CONVERSATIONS = {
 
         Object.keys(messages).forEach(function(messageid) {
             var message = messages[messageid];
-            message.messageid = messageid;
             message.modified = message.timecreated;
             message.sitehash = site.hash;
             store_messages.put(message).onsuccess = function(event) {

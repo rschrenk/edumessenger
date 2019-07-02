@@ -212,6 +212,7 @@ var DB = {
                     MOODLE.siteMyData(sites[site][userid].wwwroot, sites[site][userid].userid);
                     MOODLE.getCoursesScheduled(5000, sites[site][userid]);
                     POSTS.loadStream(sites[site].hash);
+                    CONVERSATIONS.getConversations(sites[site]);
                 });
             });
 

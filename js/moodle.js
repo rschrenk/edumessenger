@@ -119,7 +119,7 @@ var MOODLE = {
                             $('<span class="siteusername">'),
                             $('<span>').html(' | '),
                             $('<span class="sitename">'),
-                            $('<a href="#" onclick="MOODLE.siteDisconnect(' + site.hash + '); return false;" class="ui-link ui-btn ui-icon-unlink ui-btn-icon-notext ui-corner-all" data-theme="b" data-icon="unlink" data-translate="Disconnect" style="position: absolute; right: 5px; top: 7px; z-index: 999;">').html(language.t('Disconnect')),
+                            //$('<a href="#" onclick="MOODLE.siteDisconnect(' + site.hash + '); return false;" class="ui-link ui-btn ui-icon-unlink ui-btn-icon-notext ui-corner-all" data-theme="b" data-icon="unlink" data-translate="Disconnect" style="position: absolute; right: 5px; top: 7px; z-index: 999;">').html(language.t('Disconnect')),
                         ]),
                         $('<div data-role="controlgroup">').append([
                             //$('<li class="ui-field-contain">').append([
@@ -138,6 +138,7 @@ var MOODLE = {
                                 $('<input type="checkbox" id="flip-' + site.hash + '-message_mailsetting" data-mini="true">'),
                                 $('<label for="flip-' + site.hash + '-message_mailsetting" data-translate="Notification_Message_Mail">').html(language.t('Notification_Message_Mail')),
                             //]),
+                            $('<a href="#" onclick="MOODLE.siteDisconnect(' + site.hash + '); return false;" data-role="button" class="ui-link ui-btn ui-icon-unlink ui-corner-all" data-theme="b" data-icon="unlink" data-translate="Disconnect">').html(language.t('Disconnect')),
                         ]),
                     ]);
                 if (typeof sitesetting_predecessor !== 'undefined') {
@@ -146,6 +147,7 @@ var MOODLE = {
                     sitesettings.append(appendor);
                 }
                 sitesetting_predecessor = appendor;
+                appendor.trigger('create');
                 //sitesettings.find('.site-' + site.hash + ' input').flipswitch();
             }
             sitesettings.find('.site-' + site.hash + ' .sitename').html(site.sitename);
