@@ -158,7 +158,7 @@ var MOODLE = {
                 //console.debug(key, prop);
                 sitesettings.find('#flip-' + site.hash + '-' + key + 'setting')
                     .prop('checked', prop) /*.flipswitch('refresh') */
-                    .attr('onchange', 'MOODLE.sitePreference(\'' + site.hash + '\', \'' + key + '\', this);');
+                    .attr('onchange', 'MOODLE.sitePreference(' + site.hash + ', \'' + key + '\', this);');
             })
 
             sitesettings.find('.site-' + site.hash).removeClass('flag-for-removal');
@@ -369,7 +369,7 @@ var MOODLE = {
     sitePreference: function(sitehash, preference, control) {
         if (MOODLE.debug > 0) console.log('MOODLE.sitePreference(sitehash, preference, control)', sitehash, preference, control);
         $(control).css('filter', 'blur(1.5px)');
-        var site = MOODLE.siteGet(sitehash);
+        var site = MOODLE.siteGet(+sitehash);
         CONNECTOR.schedule({
             data: {
                 act: 'setPreference',

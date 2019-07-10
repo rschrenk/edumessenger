@@ -117,7 +117,7 @@ var CONNECTOR = {
             data.userid = site.userid;
             data.appid = DB.appid;
             var noforwards = {
-                'myData': true,
+                'myData': false, // We use edumessengers-myData-implementation
                 'wstoken': true,
             };
             if (typeof act === 'undefined' || typeof noforwards[act] === 'undefined' || !noforwards[act]) {

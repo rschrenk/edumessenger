@@ -118,7 +118,11 @@ var CONVERSATIONS = {
             if (typeof conversation !== 'undefined' && typeof conversation.members !== 'undefined') {
                 Object.keys(conversation.members).forEach(function(id) {
                     var memberid = conversation.members[id].userid;
-                    members[conversation.members[id].userfullname] = { userid: memberid, userpictureurl: conversation.members[id].userpictureurl };
+                    members[conversation.members[id].userfullname] = {
+                        email: conversation.members[id].email,
+                        userid: memberid,
+                        userpictureurl: conversation.members[id].userpictureurl
+                    };
                     if (memberid != site.userid) {
                         $('#conversation').attr('data-firstuserid', memberid);
                     }
@@ -135,6 +139,7 @@ var CONVERSATIONS = {
                         $('<a>').append([
                             $('<img>').attr('src', MOODLE.enhanceURL(site, members[fullname].userpictureurl)).attr('alt', fullname),
                             $('<h3>').html(fullname),
+                            $('<p>').html(members[fullname].email),
                         ]).css('background-color', (members[fullname].userid == site.userid) ? '#ecf9fe' : '')
                     ]).attr('data-icon', 'false')
                 );
