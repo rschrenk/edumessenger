@@ -467,7 +467,11 @@ language.langs.de = {
         Add_section: 'Abschnitt hinzufügen',
 		Add_to_tasks: 'Zur Aufgabenliste',
         ago_just_now: 'Gerade eben',
+<<<<<<< HEAD
         ago_days: 'vor {days} Tagen',
+=======
+        ago_days: 'vor {seconds} Tagen',
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
         ago_hours: 'vor {hours} Stunden',
         ago_minutes: 'vor {minutes} Minuten',
         ago_months: 'vor {months} Monaten',

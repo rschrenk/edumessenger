@@ -52,7 +52,11 @@ var MOODLE = {
     getLaunchURL: function(sitehash, url) {
         var url = btoa(url);
         var site = MOODLE.siteGet(sitehash);
+<<<<<<< HEAD
         return site.wwwroot + '/local/eduauth/launch.php?userid=' + site.userid + '&token=' + site.edmtoken + '&appid=' + DB.appid + '&url=' + url;
+=======
+        return site.wwwroot + '/local/edumessenger/launch.php?userid=' + site.userid + '&edmtoken=' + site.edmtoken + '&url=' + url;
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
     },
     /**
      * Retrieve the primary site and entitle one if none is set.
@@ -158,7 +162,11 @@ var MOODLE = {
                 //console.debug(key, prop);
                 sitesettings.find('#flip-' + site.hash + '-' + key + 'setting')
                     .prop('checked', prop) /*.flipswitch('refresh') */
+<<<<<<< HEAD
                     .attr('onchange', 'MOODLE.sitePreference(' + site.hash + ', \'' + key + '\', this);');
+=======
+                    .attr('onchange', 'MOODLE.sitePreference(\'' + site.wwwroot + '\', ' + site.userid + ', \'' + key + '\', this);');
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
             })
 
             sitesettings.find('.site-' + site.hash).removeClass('flag-for-removal');
@@ -252,13 +260,20 @@ var MOODLE = {
      * @return the site.
      */
     siteGet: function(identifier, userid) {
+<<<<<<< HEAD
         if (MOODLE.debug > 3) console.log('MOODLE.siteGet(identifier, userid)', identifier, userid);
+=======
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
         if (typeof identifier === 'object') return identifier;
         var wwwroot;
         var sites = DB.getConfig('sites', {});
         if(typeof identifier === 'number') {
             // This is a site-hash
+<<<<<<< HEAD
             if (typeof sites.hashcodes === 'undefined' || typeof sites.hashcodes[identifier] === 'undefined') return;
+=======
+            if (typeof sites.hashcodes === 'undefined' || sites.hashcodes[identifier] === 'undefined') return;
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
             wwwroot = sites.hashcodes[identifier].wwwroot;
             userid = sites.hashcodes[identifier].userid;
         }
@@ -302,7 +317,11 @@ var MOODLE = {
             var edmtoken = uuidv4(); //Math.random().toString(36).replace(/[^a-z]+/g, '');
             localStorage.setItem('edmtoken_' + url.hashCode(), edmtoken);
         }
+<<<<<<< HEAD
         urllaunch = url + '/local/eduauth/login.php?act=login&token=' + edmtoken + '&appid=' + DB.appid;
+=======
+        urllaunch = url + '/local/edumessenger/login.php?act=login&edmtoken=' + edmtoken;
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
         console.log(' => opening ', urllaunch);
         iab = window.open(urllaunch, '_blank', 'location=yes,hidenavigationbuttons=yes,hideurlbar=yes,toolbar=no,clearsessioncache=yes');
         iab.addEventListener('exit', function(event) {
@@ -314,12 +333,20 @@ var MOODLE = {
         });
         var testlogin = function() {
             console.log('=> Check if login is finished');
+<<<<<<< HEAD
             $.get(url + '/local/eduauth/login.php?act=getuser&token=' + edmtoken + '&appid=' + DB.appid,
                 function(data) {
                     console.log('=> Result of getuser', data);
                     var o = JSON.parse(data);
                     if (!empty(o.token) && !empty(o.userid) && o.userid > 1) {
                         o.edmtoken = o.token;
+=======
+            $.get(url + '/local/edumessenger/login.php?act=getuser&edmtoken=' + edmtoken,
+                function(data) {
+                    console.log('=> Result of getuser', data);
+                    var o = JSON.parse(data);
+                    if (!empty(o.edmtoken) && !empty(o.userid) && o.userid > 1) {
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
                         localStorage.removeItem('edmtoken_' + url.hashCode());
                         if (typeof iab !== 'undefined') iab.close();
                         var sites = DB.getConfig('sites', {});
@@ -369,14 +396,22 @@ var MOODLE = {
     sitePreference: function(sitehash, preference, control) {
         if (MOODLE.debug > 0) console.log('MOODLE.sitePreference(sitehash, preference, control)', sitehash, preference, control);
         $(control).css('filter', 'blur(1.5px)');
+<<<<<<< HEAD
         var site = MOODLE.siteGet(+sitehash);
+=======
+        var site = MOODLE.siteGet(hashcode);
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
         CONNECTOR.schedule({
             data: {
                 act: 'setPreference',
                 preference: preference,
                 value: $(control).prop('checked') ? 'on' : 'off'
             },
+<<<<<<< HEAD
             identifier: 'moodle_sitepreference_' + sitehash + '_' + preference,
+=======
+            identifier: 'moodle_sitepreference_' + wwwroot + '_' + userid + '_' + preference,
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
             payload: {
                 control: $(control).attr('id')
             },
@@ -390,15 +425,22 @@ var MOODLE = {
     siteRemoveContents: function(site) {
         site.hash = (site.wwwroot + ':' + site.userid).hashCode();
         if (MOODLE.debug > 0) console.log('MOODLE.siteRemoveContents(site)', site);
+<<<<<<< HEAD
         var t = app.db.transaction(['discussions', 'posts', 'conversations', 'messages'], 'readwrite');
         var dstore = t.objectStore('discussions');
         var pstore = t.objectStore('posts');
         var cstore = t.objectStore('conversations');
         var mstore = t.objectStore('messages');
+=======
+        var t = app.db.transaction(['discussions', 'posts'], 'readwrite');
+        var dstore = t.objectStore('discussions');
+        var pstore = t.objectStore('posts');
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
 
         var range = IDBKeyRange.bound([site.hash, 0],[site.hash, LIB.k9]);
         var ddestroy = dstore.delete(range);
         var pdestroy = pstore.delete(range);
+<<<<<<< HEAD
         var cdestroy = cstore.delete(range);
         var mdestroy = mstore.delete(range);
         // Remove anything in the DOM that is connected to this site.
@@ -408,6 +450,11 @@ var MOODLE = {
         $('#ul-conversations').empty();
         var am = ($('#ul-conversations li').length > 30) ? $('#ul-conversations li').length : 30;
         CONVERSATIONS.listStream(am);
+=======
+        // Remove anything in the DOM that is connected to this site.
+        $('.site-' + site.hash).remove();
+        POSTS.listStream($('#ul-stream li').length);
+>>>>>>> ee8a51067165a543624e7524f179e08583058a82
     },
     /**
      * Store a site.
