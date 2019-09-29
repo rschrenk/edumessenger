@@ -19,6 +19,7 @@ var DISCUSSIONS = {
      * @param fieldmapping map specific fields of post-object to html-classes.
      */
     fillDiscussionData: function(sitehash, discussionid, li, fieldmapping) {
+        if (DISCUSSIONS.debug > 3) { console.log('DISCUSSIONS.fillDiscussionData(sitehash, discussionid, li, fieldmapping)', sitehash, discussionid, li, fieldmapping); }
         app.db.transaction('discussions', 'readonly').objectStore('discussions').get([sitehash, discussionid]).onsuccess = function(event) {
             var discussion = event.target.result;
             if (discussion) {
@@ -143,6 +144,32 @@ var DISCUSSIONS = {
             payload: {
                 opendiscussionid: opendiscussionid,
             },
+            site: site,
+        }, true);
+    },
+    /**
+     * Post a discussion to the moodle forum.
+     */
+    post: function() {
+        $('#discussion-add').attr('disabled', 'disabled');
+        $('#discussion-add-topic').attr('disabled', 'disabled');
+        var sitehash = +$('#discussions').attr('data-sitehash');
+        var forumid = +$('#discussions').attr('data-forumid');
+        var groupid = +$('#discussion-add-group').val();
+        if (!Math.round(groupid) > 0) groupid = -1;
+        var site = MOODLE.siteGet(sitehash);
+        console.log(site);
+
+        CONNECTOR.schedule({
+            data: {
+                act: 'create_discussion',
+                forumid: forumid,
+                groupid: groupid,
+                message: $('#discussion-add').val(),
+                topic: $('#discussion-add-topic').val(),
+            },
+            //payload: payload,
+            identifier: 'create_discussion_' + site.wwwroot + '_' + site.userid + '_' + forumid,
             site: site,
         }, true);
     },

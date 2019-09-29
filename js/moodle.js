@@ -252,17 +252,18 @@ var MOODLE = {
      * @return the site.
      */
     siteGet: function(identifier, userid) {
-        if (MOODLE.debug > 6) console.log('MOODLE.siteGet(identifier, userid)', identifier, userid);
+        if (MOODLE.debug > 3) console.log('MOODLE.siteGet(identifier, userid)', identifier, userid);
         if (typeof identifier === 'object') return identifier;
         var wwwroot;
         var sites = DB.getConfig('sites', {});
         if(typeof identifier === 'number') {
-            // This is a site-hash
+            // This is a site-hash.
             if (typeof sites.hashcodes === 'undefined' || typeof sites.hashcodes[identifier] === 'undefined') return;
             wwwroot = sites.hashcodes[identifier].wwwroot;
             userid = sites.hashcodes[identifier].userid;
         }
         if (typeof identifier === 'string') {
+            // This is an url.
             wwwroot = identifier;
         }
         if (typeof sites[wwwroot] === 'undefined') return;
@@ -270,10 +271,12 @@ var MOODLE = {
             if (typeof sites[wwwroot][userid] === 'undefined') return;
             return sites[wwwroot][userid];
         } else if (userid == -1) {
+            // We want the list of sites for this URL.
             return sites[wwwroot];
         } else {
+            // return the first site for this url.
             var userids = Object.keys(sites[wwwroot]);
-            if (userids.length === 0) return;
+            if (typeof userid === 'undefined' || userids.length === 0) return;
             return sites[wwwroot][userids[0]];
         }
     },
@@ -399,7 +402,6 @@ var MOODLE = {
         var range = IDBKeyRange.bound([site.hash, 0],[site.hash, LIB.k9]);
         var ddestroy = dstore.delete(range);
         var pdestroy = pstore.delete(range);
-
         var cdestroy = cstore.delete(range);
         var mdestroy = mstore.delete(range);
         // Remove anything in the DOM that is connected to this site.

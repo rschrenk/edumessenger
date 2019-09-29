@@ -3,7 +3,7 @@ var DB = {
     k9: 999999999999999999, // Represents the unreachable timestamp for searching an index
     appid: 'edumessenger', // This is the app-id for moodle-local_eduauth.
     idbname: 'edm6',
-    idbversion: 3,
+    idbversion: 4,
     hasupgraded: false, // Triggers if a db upgrade has been made
     /**
     ** Sets an Item in Config
@@ -112,6 +112,7 @@ var DB = {
             if(!app.db.objectStoreNames.contains('discussions')) app.db.createObjectStore('discussions', { keyPath: ['sitehash', 'discussionid'] });
             store = event.currentTarget.transaction.objectStore('discussions');
             if(!store.indexNames.contains('sitehash')) store.createIndex('sitehash', 'sitehash', { unique: false });
+            if(!store.indexNames.contains('sitehash_discussionid')) store.createIndex('sitehash_discussionid', ['sitehash', 'discussionid'], { unique: true });
             if(!store.indexNames.contains('sitehash_forumid_modified')) store.createIndex('sitehash_forumid_modified', ['sitehash', 'forumid', 'modified'], { unique: false });
             if(!store.indexNames.contains('sitehash_forumid_groupid_modified')) store.createIndex('sitehash_forumid_groupid_modified', ['sitehash', 'forumid', 'groupid', 'modified'], { unique: false });
 

@@ -402,6 +402,7 @@ language.langs.en = {
 		Topic_title: 'Title',
 		Topic_content: 'Content',
 		Type: 'Type',
+        Unknown: 'Unknown',
 		Unkown_error_occurred: 'An unknown error occurred',
         Up: 'Up',
 		Update: 'Update',
@@ -467,11 +468,7 @@ language.langs.de = {
         Add_section: 'Abschnitt hinzufügen',
 		Add_to_tasks: 'Zur Aufgabenliste',
         ago_just_now: 'Gerade eben',
-<<<<<<< HEAD
         ago_days: 'vor {days} Tagen',
-=======
-        ago_days: 'vor {seconds} Tagen',
->>>>>>> ee8a51067165a543624e7524f179e08583058a82
         ago_hours: 'vor {hours} Stunden',
         ago_minutes: 'vor {minutes} Minuten',
         ago_months: 'vor {months} Monaten',
@@ -776,6 +773,7 @@ language.langs.de = {
 		Topic_title: 'Titel',
 		Topic_content: 'Inhalt',
 		Type: 'Typ',
+        Unknown: 'Unbekannt',
 		Unkown_error_occurred: 'Unbekannter Fehler aufgetreten',
         Up: 'Hinauf',
 		Update: 'Aktualisierung',

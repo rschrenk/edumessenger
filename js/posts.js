@@ -1,6 +1,6 @@
 // https://www.npmjs.com/package/cordova-plugin-native-keyboard
 var POSTS = {
-    debug: 1,
+    debug: 10,
     /**
      * Sets or checks if a forum is currently shown.
      */
@@ -311,6 +311,27 @@ var POSTS = {
         }, true);
     },
     /**
+     * Post a post to a discussion.
+     */
+    post: function() {
+        $('#post-add').attr('disabled', 'disabled');
+        var sitehash = +$('#posts').attr('data-sitehash');
+        var discussionid = +$('#posts').attr('data-discussionid');
+        var site = MOODLE.siteGet(sitehash);
+        console.log(site);
+
+        CONNECTOR.schedule({
+            data: {
+                act: 'create_post',
+                discussionid: discussionid,
+                message: $('#post-add').val(),
+            },
+            //payload: payload,
+            identifier: 'create_post_' + site.wwwroot + '_' + site.userid + '_' + discussionid,
+            site: site,
+        }, true);
+    },
+    /**
      * Do everything to show all posts of a specific discussion.
      * @param wwwroot
      * @param userid
@@ -336,10 +357,12 @@ var POSTS = {
             var possiblesites = MOODLE.siteGet(wwwroot, -1);
             var userids = Object.keys(possiblesites);
             if (userids.length === 0) {
-                console.error('We have no user on that site? How is that going????');
+                console.debug('We have no user on that site? How is that going????');
             } else if (userids.length === 1) {
+                console.debug('We have one user on that site and open this one automatically');
                 POSTS.show(wwwroot, userids[0], courseid, forumid, discussionid, navigate);
             } else {
+                console.debug('We have multiple sites - show dialogue', possiblesites);
                 // Load discussion.
                 var loadcnt = 0;
                 var targetcnt = userids.length;
@@ -355,7 +378,7 @@ var POSTS = {
                         loadcnt++;
                         return;
                     }
-                    app.db.transaction('discussions', 'readonly').objectStore('discussions').get([site.hash, discussionid]).onsuccess = function(event) {
+                    app.db.transaction('discussions', 'readonly').objectStore('discussions').index('sitehash_discussionid').get([site.hash, discussionid]).onsuccess = function(event) {
                         loadcnt++;
                         if (event.target.result) {
                             var discussion = event.target.result;
@@ -434,6 +457,7 @@ var POSTS = {
         for (var a = 0; a < keys.length; a++) {
             var post = posts[keys[a]];
             post.sitehash = site.hash;
+            if (typeof post.postid === 'undefined') post.postid = post.id;
             var discussiondynamic = (typeof sitedynamic.discussions !== 'undefined' && typeof sitedynamic.discussions[post.id] !== 'undefined') ? sitedynamic.discussions[post.id] : {};
             var updatedsince = discussiondynamic.updatedsince || 0;
             if (updatedsince < post.modified) {

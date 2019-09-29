@@ -188,11 +188,36 @@ var CONNECTOR = {
                 MOODLE.siteActive(site, false);
                 return;
             }
+            if (o.data.act == 'create_discussion') {
+                $('#discussion-add-topic').removeAttr('disabled');
+                $('#discussion-add').removeAttr('disabled');
+
+                if (typeof o.result.discussion !== 'undefined') {
+                    DISCUSSIONS.storeDiscussion(site, [o.result.discussion], o.result.discussion.id);
+                    $('#discussion-add-topic').val('');
+                    $('#discussion-add').val('');
+                }
+                if (typeof o.result.error !== 'undefined') {
+                    UI.alert(o.result.error);
+                }
+            }
             if (o.data.act == 'create_message') {
                 $('#message-add').removeAttr('disabled');
                 if (typeof o.result.message !== 'undefined') {
                     CONVERSATIONS.storeMessages(site, [o.result.message]);
                     $('#message-add').val('');
+                }
+                if (typeof o.result.error !== 'undefined') {
+                    UI.alert(o.result.error);
+                }
+            }
+            if (o.data.act == 'create_post') {
+                $('#post-add').removeAttr('disabled');
+
+                if (typeof o.result.post !== 'undefined') {
+                    POSTS.store(site, [o.result.post]);
+                    $('#post-add').val('');
+                    POSTS.show(site.wwwroot, site.userid, o.result.post.courseid, o.result.post.forumid, o.result.post.discussionid, true);
                 }
                 if (typeof o.result.error !== 'undefined') {
                     UI.alert(o.result.error);
