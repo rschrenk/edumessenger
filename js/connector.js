@@ -193,7 +193,7 @@ var CONNECTOR = {
                 $('#discussion-add').removeAttr('disabled');
 
                 if (typeof o.result.discussion !== 'undefined') {
-                    DISCUSSIONS.storeDiscussion(site, [o.result.discussion], o.result.discussion.id);
+                    DISCUSSIONS.store(site, [o.result.discussion], o.result.discussion.id);
                     $('#discussion-add-topic').val('');
                     $('#discussion-add').val('');
                 }
@@ -204,7 +204,7 @@ var CONNECTOR = {
             if (o.data.act == 'create_message') {
                 $('#message-add').removeAttr('disabled');
                 if (typeof o.result.message !== 'undefined') {
-                    CONVERSATIONS.storeMessages(site, [o.result.message]);
+                    CONVERSATIONS.store(site, [o.result.message]);
                     $('#message-add').val('');
                 }
                 if (typeof o.result.error !== 'undefined') {

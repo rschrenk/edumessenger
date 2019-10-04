@@ -60,6 +60,8 @@ var POSTS = {
         var site = MOODLE.siteGet(sitehash);
         var course = site.courses[courseid];
         var forum = course.forums[forumid];
+        $('#posts-panel-right .link-forum').attr('onclick', 'DISCUSSIONS.show(' + site.hash + ', ' + forum.course + ', ' + forum.id + ', 1); return false;');
+        $('#posts-panel-right .link-course').attr('onclick', 'if (COURSES.listCourse(' + site.hash + ', ' + forum.course + ')) { UI.navigate("#course"); }; return false;');
 
         // ATTENTION, check if this forum is accessible with other connected sites. If it is so provide a popup via a button on the right upper corner.
         // This also applies to posts. (and messages?)

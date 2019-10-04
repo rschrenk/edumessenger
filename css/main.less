@@ -1,4 +1,4 @@
-// "out": "main2.css", "compress": true 
+// out: main.css, sourcemap: false, compress: false
 /**
  * WELCOME TO THE MAIN CSS FILE FOR EDUMESSENGER
  * Author: Robert Schrenk
@@ -82,186 +82,330 @@ div[data-role="page"] {
 /**
  * AVAILABILITY
  */
-#availability .active {
-    background-color: rgba(0,255,0,0.4);
-}
-#availability .inactive {
-    background-color: rgba(255,0,0,0.4);
+#availability {
+    .active {
+        background-color: rgba(0,255,0,0.4);
+    }
+    .inactive {
+        background-color: rgba(255,0,0,0.4);
+    }
 }
 
 /**
  * DISCUSSIONS
  */
 
-#discussions #ul-discussions h3 {
-    font-size: 0.8em;
-    margin-top: 0;
-}
-#discussions #ul-discussions p {
-    color: darkgray;
-    font-size: 0.7em;
-    height: 2.7em;
-    white-space: normal;
-}
-#discussions #ul-discussions .ui-li-count {
-    font-size: 0.6em;
-    font-weight: normal;
-    margin-top: 0;
-    position: absolute;
-    top: 0;
+#discussions {
+    #ul-discussions {
+        h3 {
+            font-size: 0.8em;
+            margin-top: 0;
+        }
+        p {
+            color: darkgray;
+            font-size: 0.7em;
+            height: 2.7em;
+            white-space: normal;
+        }
+        .ui-li-count {
+            font-size: 0.6em;
+            font-weight: normal;
+            margin-top: 0;
+            position: absolute;
+            top: 0;
+        }
+    }
 }
 
 /**
  * MAINMENU
  */
-#mainmenu h1 {
-    text-align: left;
-    padding-left: 5px;
-}
-
-#mainmenu .user-foto {
-    border: 1px solid darkgray;
-    border-radius: 50%;
-    float: left;
-    height: 35px;
-    padding: 2px;
-}
-
-#mainmenu ul li a{
-    padding-left: calc(2.5em + 5px) !important;
-    padding-right: 1em !important;
-}
-#mainmenu ul li a:after{
-    right: auto;
-    left: 9px;
-    transform: scaleX(-1);
+#mainmenu {
+    h1 {
+        text-align: left;
+        padding-left: 5px;
+    }
+    ul {
+        li {
+            a {
+                padding-left: 50px !important;
+                padding-right: 1em !important;
+            }
+            a:after{
+                right: auto;
+                left: 9px;
+                transform: scaleX(-1);
+            }
+        }
+    }
+    .user-foto {
+        border: 1px solid darkgray;
+        border-radius: 50%;
+        float: left;
+        height: 35px;
+        padding: 2px;
+    }
 }
 
 /**
  * POSTS
  */
-#posts #div-posts, #conversation #div-conversation {
-    margin-bottom: 50px;
-    overflow-x: scroll;
-    text-overflow: hidden;
-}
-#posts #div-posts .post,
-#conversation #div-conversation .message {
-    margin-top: 15px;
+#posts {
+    #div-posts {
+        margin-bottom: 50px;
+        overflow-x: scroll;
+        text-overflow: hidden;
 
-}
-#posts #div-posts .post>div,
-#conversation #div-conversation .message>div {
-    border-radius: 15px;
-}
-#posts #div-posts .post-self>div,
-#conversation #div-conversation .message-self>div {
-	/* margin-left: 35px !important; */
-	background-color: rgba(0,255,0,0.1);
-}
-#posts #div-posts .post-other>div,
-#conversation #div-conversation .message-other>div {
-	/* margin-right: 40px; */
-	/* background-color: rgba(255,0,0,0.1); */
-    background-color: rgba(166, 217, 251, 0.3);
-}
-#posts #div-posts .post .subject,
-#conversation #div-conversation .message .subject {
-	font-weight: bold;
-}
-#posts #div-posts .post .message,
-#conversation #div-conversation .message .message {
-	font-weight: normal;
-    padding: 4px;
-    white-space: normal;
-}
-#posts #div-posts .post .datetime,
-#conversation #div-conversation .message .datetime {
-	position: absolute; top: 1em; left: 10px;
-    font-size: 0.5em;
-}
-#posts #div-posts .post p,
-#conversation #div-conversation .message p {
-	padding: 0px; margin: 0em 0px;
-	text-transform: none;
-}
-#posts #div-posts .post p:first-child,
-#conversation #div-conversation .message p:first-child {
-    margin: 0px;
-}
-#posts #div-posts .post .author,
-#conversation #div-conversation .message .author {
-    text-align: right;
-    font-weight: bold;
-    background-color: rgba(200, 200, 200, 0.4);
-    border-bottom: 1px solid black;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    padding-right: 15px;
-}
-#posts #div-posts .post-other .author,
-#conversation #div-conversation .message-other .author {
-    padding-right: 45px;
-}
-#posts #div-posts .post .score, {
-    position: absolute; right: 0px;
-    margin-top: calc(-1em - 9px);
-    border-top-left-radius: inherit;
-    border-bottom-right-radius: inherit;
-    border-top: inherit;
-    border-left: inherit;
-    background-color: rgba(255, 255, 255, 0.4);
-    padding: 2px 10px;
-    font-size: 0.7em;
-    text-decoration: none;
-    text-align: center;
-    font-weight: bold;
-    color: black;
-    /*
-    float: left;
-    padding-left: 10px;
-    padding-top: 3px;
-    font-size: 0.7em;
-    text-decoration: none;
-    text-align: center;
-    font-weight: bold;
-    color: black;
-    */
-}
-#posts #div-posts .post .score[href="#popupGrade"] {
-    color: red;
-}
-#posts #div-posts .post .userpicture,
-#conversation #div-conversation .message .userpicture {
-	width: 30px; height: 30px;
-	float: right;
-	border-radius: 50%;
-	overflow: hidden;
-	padding: 0px;
-	margin: 5px 5px 5px 5px;
-}
-#posts .ui-not-read:first-child::before, #messages .ui-not-read:first-child::before {
-    content: ' ';
-    height: 2px;
-    background-color: rgba(255, 0, 0, 0.6);
+        .post {
+            margin-top: 15px;
+            &>div {
+                border-radius: 15px;
+            }
+            p {
+            	padding: 0px; margin: 0em 0px;
+            	text-transform: none;
+            }
+            p:first-child {
+                margin: 0px;
+            }
+            .author {
+                text-align: right;
+                font-weight: bold;
+                background-color: rgba(200, 200, 200, 0.4);
+                border-bottom: 1px solid black;
+                border-top-left-radius: 15px;
+                border-top-right-radius: 15px;
+                padding-right: 15px;
+            }
+            .datetime {
+            	position: absolute; top: 1em; left: 10px;
+                font-size: 0.5em;
+            }
+            .message {
+            	font-weight: normal;
+                padding: 4px;
+                white-space: normal;
+            }
+            .score {
+                position: absolute; right: 0px;
+                margin-top: calc(-1em - 9px);
+                border-top-left-radius: inherit;
+                border-bottom-right-radius: inherit;
+                border-top: inherit;
+                border-left: inherit;
+                background-color: rgba(255, 255, 255, 0.4);
+                padding: 2px 10px;
+                font-size: 0.7em;
+                text-decoration: none;
+                text-align: center;
+                font-weight: bold;
+                color: black;
+                /*
+                float: left;
+                padding-left: 10px;
+                padding-top: 3px;
+                font-size: 0.7em;
+                text-decoration: none;
+                text-align: center;
+                font-weight: bold;
+                color: black;
+                */
+            }
+            .score[href="#popupGrade"] {
+                color: red;
+            }
+            .subject {
+            	font-weight: bold;
+            }
+            .userpicture {
+            	width: 30px; height: 30px;
+            	float: right;
+            	border-radius: 50%;
+            	overflow: hidden;
+            	padding: 0px;
+            	margin: 5px 5px 5px 5px;
+            }
+        }
+        .post-other {
+            &>div {
+                /* margin-right: 40px; */
+            	/* background-color: rgba(255,0,0,0.1); */
+                background-color: rgba(166, 217, 251, 0.3);
+            }
+            .author {
+                padding-right: 45px;
+            }
+        }
+        .post-self {
+            &>div {
+                /* margin-left: 35px !important; */
+            	background-color: rgba(0,255,0,0.1);
+            }
+        }
+    }
+    #posts-add-box {
+        border-top: 1px solid darkblue;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 50px;
+    }
+    .attachments {
+        padding-left: 20px; padding-right: 20px;
+        a {
+            text-decoration: none;
+            color: black;
+        }
+    }
+    #popupImageSlide,  #popupImageSlide {
+        img, video {
+            height: 100%; width: 100%;
+        }
+    }
+    #popupImageSlide.ui-show-img {
+        video {
+            display: none;
+        }
+    }
+    #popupImageSlide.ui-show-video {
+        img {
+            display: none;
+        }
+    }
+    .posts-add-box-expanded {
+        #div-posts {
+            margin-bottom: 400px !important;
+        }
+        #posts-add-box {
+            height: 390px;
+        }
+    }
+    .ui-not-read:first-child::before {
+        content: ' ';
+        height: 2px;
+        background-color: rgba(255, 0, 0, 0.6);
+    }
+    div[role="main"]:not(.expanded) {
+        #div-posts {
+            margin-bottom: 50px;
+        }
+        #posts-add-box {
+            height: 50px;
+        }
+    }
+    div[role="main"].expanded {
+        #div-posts {
+            margin-bottom: 250px;
+        }
+        #posts-add-box {
+            height: 240px;
+        }
+    }
 }
 
-#posts .posts-add-box-expanded>#div-posts,
-#conversation .conversation-add-box-expanded>#div-conversations  {
-    margin-bottom: 400px !important;
-}
-#posts .posts-add-box-expanded>#posts-add-box,
-#conversation .conversation-add-box-expanded>#conversations-add-box {
-    height: 390px;
-}
-#posts #posts-add-box,
-#conversation #conversations-add-box {
-    border-top: 1px solid darkblue;
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 50px;
+#conversation {
+    #div-conversation {
+        margin-bottom: 50px;
+        overflow-x: scroll;
+        text-overflow: hidden;
+
+        .message {
+            margin-top: 15px;
+            &>div {
+                border-radius: 15px;
+            }
+            p {
+            	padding: 0px; margin: 0em 0px;
+            	text-transform: none;
+            }
+            p:first-child {
+                margin: 0px;
+            }
+            .author {
+                text-align: right;
+                font-weight: bold;
+                background-color: rgba(200, 200, 200, 0.4);
+                border-bottom: 1px solid black;
+                border-top-left-radius: 15px;
+                border-top-right-radius: 15px;
+                padding-right: 15px;
+            }
+            .datetime {
+            	position: absolute; top: 1em; left: 10px;
+                font-size: 0.5em;
+            }
+            .message {
+            	font-weight: normal;
+                padding: 4px;
+                white-space: normal;
+            }
+            .subject {
+            	font-weight: bold;
+            }
+            .userpicture {
+            	width: 30px; height: 30px;
+            	float: right;
+            	border-radius: 50%;
+            	overflow: hidden;
+            	padding: 0px;
+            	margin: 5px 5px 5px 5px;
+            }
+        }
+        .message-other {
+            &>div {
+                /* margin-right: 40px; */
+            	/* background-color: rgba(255,0,0,0.1); */
+                background-color: rgba(166, 217, 251, 0.3);
+            }
+            .author {
+                padding-right: 45px;
+            }
+        }
+        .message-self {
+            &>div {
+                /* margin-left: 35px !important; */
+            	background-color: rgba(0,255,0,0.1);
+            }
+        }
+    }
+    #conversations-add-box {
+        border-top: 1px solid darkblue;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 50px;
+    }
+    .conversation-add-box-expanded {
+        #div-conversations {
+            margin-bottom: 400px !important;
+        }
+        &>#conversations-add-box {
+            height: 390px;
+        }
+    }
+    .ui-not-read:first-child::before {
+        content: ' ';
+        height: 2px;
+        background-color: rgba(255, 0, 0, 0.6);
+    }
+    div[role="main"]:not(.expanded) {
+        #div-conversations {
+            margin-bottom: 50px;
+        }
+        #conversations-add-box {
+            height: 50px;
+        }
+    }
+    div[role="main"].expanded {
+        #div-conversations {
+            margin-bottom: 250px;
+        }
+        #conversations-add-box {
+            height: 250px;
+        }
+    }
 }
 
 #posts #popupGrade[data-scaletype="numeric"] div[role="main"] div.grader:not(.numeric), #posts #popupGradeInfo[data-scaletype="numeric"] div[role="main"] div.grader:not(.numeric) {
@@ -289,50 +433,6 @@ div[data-role="page"] {
     max-height: 100%;
 }
 
-#posts div[role="main"]:not(.expanded) #div-posts,
-#conversation div[role="main"]:not(.expanded) #div-conversations {
-    margin-bottom: 50px;
-}
-#posts div[role="main"]:not(.expanded) #posts-add-box,
-#conversation div[role="main"]:not(.expanded) #conversations-add-box {
-    height: 50px;
-}
-#posts div[role="main"].expanded #div-posts,
-#conversation div[role="main"].expanded #div-conversations {
-    margin-bottom: 250px;
-}
-#posts div[role="main"].expanded #posts-add-box,
-#conversation div[role="main"].expanded #conversations-add-box {
-    height: 250px;
-}
-
-
-/*
-#posts #div-posts .post-self .userpicture {
-	display: none;
-}
-*/
-
-#posts .attachments {
-    padding-left: 20px; padding-right: 20px;
-}
-#posts .attachments a {
-    text-decoration: none;
-    color: black;
-}
-
-#posts #popupImageSlide img, #posts #popupImageSlide video {
-    height: 100%; width: 100%;
-}
-
-#posts #popupImageSlide.ui-show-img video {
-    display: none;
-}
-#posts #popupImageSlide.ui-show-video img {
-    display: none;
-}
-
-
 /**
  * SETTINGS
  */
@@ -346,20 +446,24 @@ div[data-role="page"] {
 /**
  * STREAM
  */
-#stream #ul-stream h3 {
-    font-size: 0.8em;
-    margin-top: 0;
-}
-#stream #ul-stream p {
-    color: darkgray;
-    font-size: 0.7em;
-    height: 2.7em;
-    white-space: normal;
-}
-#stream #ul-stream .ui-li-count {
-    font-size: 0.6em;
-    font-weight: normal;
-    margin-top: 0;
-    position: absolute;
-    top: 0;
+#stream {
+    #ul-stream {
+        .ui-li-count {
+            font-size: 0.6em;
+            font-weight: normal;
+            margin-top: 0;
+            position: absolute;
+            top: 0;
+        }
+        h3 {
+            font-size: 0.8em;
+            margin-top: 0;
+        }
+        p {
+            color: darkgray;
+            font-size: 0.7em;
+            height: 2.7em;
+            white-space: normal;
+        }
+    }
 }

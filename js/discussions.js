@@ -159,6 +159,8 @@ var DISCUSSIONS = {
         if (!Math.round(groupid) > 0) groupid = -1;
         var site = MOODLE.siteGet(sitehash);
         console.log(site);
+        // We send potential userids we have locally to get info about access.
+        var possiblesites = MOODLE.siteGet(site.wwwroot, -1);
 
         CONNECTOR.schedule({
             data: {
@@ -166,6 +168,7 @@ var DISCUSSIONS = {
                 forumid: forumid,
                 groupid: groupid,
                 message: $('#discussion-add').val(),
+                potentialusers: Object.keys(possiblesites),
                 topic: $('#discussion-add-topic').val(),
             },
             //payload: payload,
@@ -197,31 +200,64 @@ var DISCUSSIONS = {
         if (DISCUSSIONS.debug > 3) { console.log('DISCUSSIONS.store(site, discussions, opendiscussionid)', site, discussions, opendiscussionid); }
         $('#ul-discussions .loading').remove();
         var sitedynamic = MOODLE.siteGetDynamic(site.hash);
+        var openasuserid = 0;
 
-        var store = app.db.transaction('discussions', 'readwrite').objectStore('discussions');
+        var parseddiscussions = [];
+        // First step: Parse through discussions and create a new array. If a discussion belongs to multiple users we multiply it for each user!
         var keys = Object.keys(discussions);
         keys.forEach(function(discussionid) {
-            var discussion = discussions[discussionid];
-            discussion.sitehash = site.hash;
-            if (typeof sitedynamic.forums === 'undefined') sitedynamic.forums = {};
-            if (typeof sitedynamic.forums[discussion.forumid] === 'undefined') sitedynamic.forums[discussion.forumid] = {};
-            var forumdynamic = sitedynamic.forums[discussion.forumid] || {};
-            var updatedsince = forumdynamic.updatedsince || 0;
-            if (updatedsince < discussion.timemodified) {
-                sitedynamic.forums[discussion.forumid].updatedsince = discussion.timemodified;
-                MOODLE.siteGetDynamic(site.hash, sitedynamic);
+            var odiscussion = discussions[discussionid];
+            // If we do it like that we store the original userid as "openasuserid"
+            if (typeof odiscussion.accessusers !== 'undefined') {
+                openasuserid = site.userid;
+                odiscussion.accessusers.forEach(function(userid) {
+                    var discussion = JSON.parse(JSON.stringify(odiscussion));
+                    var xsite = MOODLE.siteGet(site.wwwroot, userid);
+                    discussion.sitehash = xsite.hash;
+                    delete(discussion.accessusers);
+                    var xsitedynamic = MOODLE.siteGetDynamic(xsite.hash);
+                    if (typeof xsitedynamic.forums === 'undefined') xsitedynamic.forums = {};
+                    if (typeof xsitedynamic.forums[discussion.forumid] === 'undefined') xsitedynamic.forums[discussion.forumid] = {};
+                    var xforumdynamic = xsitedynamic.forums[discussion.forumid] || {};
+                    var updatedsince = xforumdynamic.updatedsince || 0;
+                    if (updatedsince < discussion.timemodified) {
+                        xsitedynamic.forums[discussion.forumid].updatedsince = discussion.timemodified;
+                        MOODLE.siteGetDynamic(site.hash, xsitedynamic);
+                    }
+                    parseddiscussions[parseddiscussions.length] = discussion;
+                });
+            } else {
+                odiscussion.sitehash = site.hash;
+                if (typeof sitedynamic.forums === 'undefined') sitedynamic.forums = {};
+                if (typeof sitedynamic.forums[odiscussion.forumid] === 'undefined') sitedynamic.forums[odiscussion.forumid] = {};
+                var forumdynamic = sitedynamic.forums[odiscussion.forumid] || {};
+                var updatedsince = forumdynamic.updatedsince || 0;
+                if (updatedsince < odiscussion.timemodified) {
+                    sitedynamic.forums[discussion.forumid].updatedsince = odiscussion.timemodified;
+                    MOODLE.siteGetDynamic(site.hash, sitedynamic);
+                }
+                parseddiscussions[parseddiscussions.length] = odiscussion;
             }
+        });
+        console.debug('Parsed discussions', parseddiscussions);
+
+        // Second step: Just put them into the database.
+
+        var store = app.db.transaction('discussions', 'readwrite').objectStore('discussions');
+        var keys = Object.keys(parseddiscussions);
+        keys.forEach(function(parseddiscussionid) {
+            var discussion = parseddiscussions[parseddiscussionid];
             if (DISCUSSIONS.debug > 5) { console.log('=> Storing', discussion); }
-            var islast = discussionid == keys[keys.length - 1];
+            var islast = parseddiscussionid == keys[keys.length - 1];
             store.put(discussion).onsuccess = function(){
                 if (islast) {
                     // Ensure to reload interface when we view a specific forum.
                     DISCUSSIONS.listDiscussions(site.hash, discussion.courseid, discussion.forumid);
                     if (!empty(opendiscussionid)) {
-                        app.db.transaction('discussions', 'readwrite').objectStore('discussions').get([site.hash, opendiscussionid]).onsuccess = function(event) {
+                        app.db.transaction('discussions', 'readonly').objectStore('discussions').get([site.hash, opendiscussionid]).onsuccess = function(event) {
                             var discussion = event.target.result;
                             if (discussion) {
-                                POSTS.show(site.wwwroot, 0, discussion.courseid, discussion.forumid, discussion.discussionid, true);
+                                POSTS.show(site.wwwroot, openasuserid, discussion.courseid, discussion.forumid, discussion.discussionid, true);
                             } else {
                                 console.error('Wanted to open opendiscussionid', opendiscussionid, 'but it still can not be found');
                             }

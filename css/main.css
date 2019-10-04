@@ -118,21 +118,21 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   text-align: left;
   padding-left: 5px;
 }
-#mainmenu .user-foto {
-  border: 1px solid darkgray;
-  border-radius: 50%;
-  float: left;
-  height: 35px;
-  padding: 2px;
-}
 #mainmenu ul li a {
-  padding-left: calc(7.5em) !important;
+  padding-left: 50px !important;
   padding-right: 1em !important;
 }
 #mainmenu ul li a:after {
   right: auto;
   left: 9px;
   transform: scaleX(-1);
+}
+#mainmenu .user-foto {
+  border: 1px solid darkgray;
+  border-radius: 50%;
+  float: left;
+  height: 35px;
+  padding: 2px;
 }
 /**
  * POSTS
@@ -163,7 +163,7 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   border-bottom: 1px solid black;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  padding-right: 45px;
+  padding-right: 15px;
 }
 #posts #div-posts .post .datetime {
   position: absolute;
@@ -208,10 +208,6 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
 #posts #div-posts .post .subject {
   font-weight: bold;
 }
-#posts #div-posts .post .ui-tapped-double .ui-overlay-tapped-double,
-#posts #div-posts .post .ui-tapped-long .ui-overlay-tapped-long {
-  max-height: 100%;
-}
 #posts #div-posts .post .userpicture {
   width: 30px;
   height: 30px;
@@ -221,22 +217,17 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   padding: 0px;
   margin: 5px 5px 5px 5px;
 }
-#posts #div-posts .post-self > div {
-  /* margin-left: 35px !important; */
-  background-color: rgba(0, 255, 0, 0.1);
-}
 #posts #div-posts .post-other > div {
   /* margin-right: 40px; */
   /* background-color: rgba(255,0,0,0.1); */
   background-color: rgba(166, 217, 251, 0.3);
 }
-#posts .ui-not-read:first-child::before {
-  content: ' ';
-  height: 2px;
-  background-color: rgba(255, 0, 0, 0.6);
+#posts #div-posts .post-other .author {
+  padding-right: 45px;
 }
-#posts .post-add-box-expanded > #div-posts {
-  margin-bottom: 400px !important;
+#posts #div-posts .post-self > div {
+  /* margin-left: 35px !important; */
+  background-color: rgba(0, 255, 0, 0.1);
 }
 #posts #posts-add-box {
   border-top: 1px solid darkblue;
@@ -246,16 +237,49 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   left: 0;
   height: 50px;
 }
-#posts #posts-add-box textarea {
-  border: none;
+#posts .attachments {
+  padding-left: 20px;
+  padding-right: 20px;
 }
-#posts #popupGrade[data-scaletype="numeric"] div[role="main"] div.grader:not(.numeric),
-#posts #popupGradeInfo[data-scaletype="numeric"] div[role="main"] div.grader:not(.numeric) {
+#posts .attachments a {
+  text-decoration: none;
+  color: black;
+}
+#posts #popupImageSlide img,
+#posts #popupImageSlide img,
+#posts #popupImageSlide video,
+#posts #popupImageSlide video {
+  height: 100%;
+  width: 100%;
+}
+#posts #popupImageSlide.ui-show-img video {
   display: none;
 }
-#posts #popupGrade[data-scaletype="other"] div[role="main"] div.grader:not(.other),
-#posts #popupGradeInfo[data-scaletype="other"] div[role="main"] div.grader:not(.other) {
+#posts #popupImageSlide.ui-show-video img {
   display: none;
+}
+#posts .posts-add-box-expanded #div-posts {
+  margin-bottom: 400px !important;
+}
+#posts .posts-add-box-expanded #posts-add-box {
+  height: 390px;
+}
+#posts .ui-not-read:first-child::before {
+  content: ' ';
+  height: 2px;
+  background-color: rgba(255, 0, 0, 0.6);
+}
+#posts div[role="main"]:not(.expanded) #div-posts {
+  margin-bottom: 50px;
+}
+#posts div[role="main"]:not(.expanded) #posts-add-box {
+  height: 50px;
+}
+#posts div[role="main"].expanded #div-posts {
+  margin-bottom: 250px;
+}
+#posts div[role="main"].expanded #posts-add-box {
+  height: 250px;
 }
 #conversation #div-conversation {
   margin-bottom: 50px;
@@ -283,7 +307,7 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   border-bottom: 1px solid black;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  padding-right: 45px;
+  padding-right: 15px;
 }
 #conversation #div-conversation .message .datetime {
   position: absolute;
@@ -308,22 +332,17 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   padding: 0px;
   margin: 5px 5px 5px 5px;
 }
-#conversation #div-conversation .message-self > div {
-  /* margin-left: 35px !important; */
-  background-color: rgba(0, 255, 0, 0.1);
-}
 #conversation #div-conversation .message-other > div {
   /* margin-right: 40px; */
   /* background-color: rgba(255,0,0,0.1); */
   background-color: rgba(166, 217, 251, 0.3);
 }
-#conversation .ui-not-read:first-child::before {
-  content: ' ';
-  height: 2px;
-  background-color: rgba(255, 0, 0, 0.6);
+#conversation #div-conversation .message-other .author {
+  padding-right: 45px;
 }
-#conversation .conversation-add-box-expanded > #div-conversations {
-  margin-bottom: 400px !important;
+#conversation #div-conversation .message-self > div {
+  /* margin-left: 35px !important; */
+  background-color: rgba(0, 255, 0, 0.1);
 }
 #conversation #conversations-add-box {
   border-top: 1px solid darkblue;
@@ -332,6 +351,37 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   bottom: 0;
   left: 0;
   height: 50px;
+}
+#conversation .conversation-add-box-expanded #div-conversations {
+  margin-bottom: 400px !important;
+}
+#conversation .conversation-add-box-expanded > #conversations-add-box {
+  height: 390px;
+}
+#conversation .ui-not-read:first-child::before {
+  content: ' ';
+  height: 2px;
+  background-color: rgba(255, 0, 0, 0.6);
+}
+#conversation div[role="main"]:not(.expanded) #div-conversations {
+  margin-bottom: 50px;
+}
+#conversation div[role="main"]:not(.expanded) #conversations-add-box {
+  height: 50px;
+}
+#conversation div[role="main"].expanded #div-conversations {
+  margin-bottom: 250px;
+}
+#conversation div[role="main"].expanded #conversations-add-box {
+  height: 250px;
+}
+#posts #popupGrade[data-scaletype="numeric"] div[role="main"] div.grader:not(.numeric),
+#posts #popupGradeInfo[data-scaletype="numeric"] div[role="main"] div.grader:not(.numeric) {
+  display: none;
+}
+#posts #popupGrade[data-scaletype="other"] div[role="main"] div.grader:not(.other),
+#posts #popupGradeInfo[data-scaletype="other"] div[role="main"] div.grader:not(.other) {
+  display: none;
 }
 .ui-overlay-tapped-double,
 .ui-overlay-tapped-long {
@@ -352,31 +402,12 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   background-color: transparent !important;
   border: none !important;
 }
-.ui-overlay-tapped-double a.checked:after,
-.ui-overlay-tapped-long a.checked:after {
+.ui-overlay-tapped-double a.checked:after {
   background-color: #ff0000;
 }
-/*
-#posts #div-posts .post-self .userpicture {
-	display: none;
-}
-*/
-#posts .attachments {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-#posts .attachments a {
-  text-decoration: none;
-  color: black;
-}
-#posts #popupImageSlide img,
-#posts #popupImageSlide video {
-  height: 100%;
-  width: 100%;
-}
-#posts #popupImageSlide.ui-show-img video,
-#posts #popupImageSlide.ui-show-video img {
-  display: none;
+.post.ui-tapped-double .ui-overlay-tapped-double,
+.post.ui-tapped-long .ui-overlay-tapped-long {
+  max-height: 100%;
 }
 /**
  * SETTINGS
@@ -390,6 +421,13 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
 /**
  * STREAM
  */
+#stream #ul-stream .ui-li-count {
+  font-size: 0.6em;
+  font-weight: normal;
+  margin-top: 0;
+  position: absolute;
+  top: 0;
+}
 #stream #ul-stream h3 {
   font-size: 0.8em;
   margin-top: 0;
@@ -399,11 +437,4 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   font-size: 0.7em;
   height: 2.7em;
   white-space: normal;
-}
-#stream #ul-stream .ui-li-count {
-  font-size: 0.6em;
-  font-weight: normal;
-  margin-top: 0;
-  position: absolute;
-  top: 0;
 }

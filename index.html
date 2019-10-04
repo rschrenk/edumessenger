@@ -255,11 +255,11 @@
                 <input id="discussion-add-topic" name="discussion-add-topic" onkeyup="UI.addKeyUp(event)" placeholder="Title" data-translate="Topic_title" />
                 <textarea id="discussion-add" name="discussion-add" onkeyup="UI.addKeyUp(event)" style="width: 100%; height: 100px; background-color: rgba(255,255,255,0.6);" data-role="none"></textarea>
             </div>
-            <a href="#" id="btn-discussion-add" onclick="DISCUSSIONS.postDiscussion();" data-role="button" data-icon="plus" data-translate="Add_discussion" data-theme="b">Add Discussion</a>
+            <a href="#" id="btn-discussion-add" onclick="DISCUSSIONS.post();" data-role="button" data-icon="plus" data-translate="Add_discussion" data-theme="b">Add Discussion</a>
             <div>
                 <div data-role="controlgroup" data-mini="true" class="checkable">
                     <a href="#" data-role="button" id="discussion-add-resource" name="discussion-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-translate="Attach_resource">Ressource anfügen</a>
-                    <a href="#attachments" data-role="button" data-icon="paperclip" data-translate="Attach_file">Datei anhängen</a>
+                    <!-- <a href="#attachments" data-role="button" data-icon="paperclip" data-translate="Attach_file">Datei anhängen</a> -->
                     <a href="#markdown" data-role="button" data-icon="code">Markdown</a>
                 </div>
             </div>
@@ -281,13 +281,13 @@
             <div id="div-posts" data-filter="true" data-input="#div-posts-filter"></div>
             <div id="posts-add-box">
                 <a href="#" id="btn-post-add-expand" class="ui-btn-left expander" onclick="UI.toggleClass('#posts div[role=\'main\']', 'expanded', this, ['carat-d', 'carat-u']);" data-role="button" data-icon="carat-u" data-iconpos="notext" data-translate="Expand">Expand</a>
-                <textarea data-wrapper-class="controlgroup-textinput ui-btn" id="post-add" name="post-add" onchange="UI.addKeyUp(event)" style="background-color: rgba(255,255,255,0.6); margin-left: 40px; width: calc(100% - 90px);" data-role="none"></textarea>
+                <textarea data-wrapper-class="controlgroup-textinput ui-btn" id="post-add" name="post-add" onchange="UI.addKeyUp(event)" style="background-color: rgba(255,255,255,0.6); margin: 2px auto auto 40px; width: calc(100% - 90px); height: calc(100% - 10px);" data-role="none"></textarea>
                 <a href="#" id="btn-post-add" class="ui-btn-right" onclick="POSTS.post();" data-role="button" data-icon="plus" data-theme="b" data-iconpos="notext" data-translate="Add_post">Add Post</a>
 
                 <div class="expand-hidden" style="position: absolute; left: 0px; top: 40px; height: 100%;">
-                    <div data-role="controlgroup" style="width: 20px; margin-left: 6px;">
+                    <div data-role="controlgroup" style="width: 20px; margin-left: 3px;">
                         <a href="#" data-role="button" id="post-add-resource" name="post-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-iconpos="notext" data-translate="Attach_resource">Ressource anfügen</a>
-                        <a href="#attachments" data-role="button" data-icon="paperclip" data-iconpos="notext" data-translate="Attach_file">Datei anhängen</a>
+                        <!-- <a href="#attachments" data-role="button" data-icon="paperclip" data-iconpos="notext" data-translate="Attach_file">Datei anhängen</a> -->
                     </div>
                 </div>
                 <div class="expand-hidden" style="position: absolute; right: 5px; top: 40px; height: 100%;">
@@ -351,8 +351,12 @@
             <div data-role="header"><h1 data-translate="Actions">Aktionen</h1></div>
             <ul data-role="listview" data-inset="true" data-split-icon="clipboard" style="overflow: hidden;">
                 <li style="height: 50px;">
-                    <a href="#" class="link-discussions ui-btn ui-btn-icon-left ui-icon-comments-o" data-translate="Discussions">Diskussion</a>
+                    <a href="#" class="link-course ui-btn ui-btn-icon-left ui-icon-group" data-translate="Course">Kurs</a>
                 </li>
+                <li style="height: 50px;">
+                    <a href="#" class="link-forum ui-btn ui-btn-icon-left ui-icon-comments-o" data-translate="Forum">Forum</a>
+                </li>
+                <!--
                 <li style="height: 50px;">
                     <a href="#" class="btn-appearin" style="padding: 5px 0px 0px 40px; height: 50px;"><img src="img/icon-appearin.png" alt="Appear.in" style="max-width: 40px;"/><h3 data-translate="Videochat">Videochat</h3></a>
                     <a href="#" class="btn-clipboard btn-appearin-clipboard" data-clipboard-text="" onclick="$('#popCopied').popup('open', { positionTo: 'origin', transition: 'pop' }); setTimeout(function(){$('#popCopied').popup('close');},500);" style="height: 50px;">copy</a>
@@ -361,11 +365,13 @@
                     <a href="#" class="btn-etherpad" style="padding: 5px 0px 0px 40px; height: 50px;"><img src="img/icon-etherpad.png" alt="Etherpad" style="max-width: 40px;"/><h3 data-translate="Etherpad">Etherpad</h3></a>
                     <a href="#" class="btn-clipboard btn-etherpad-clipboard" data-clipboard-text="" onclick="$('#popCopied').popup('open', { positionTo: 'origin', transition: 'pop' }); setTimeout(function(){$('#popCopied').popup('close');},500);" style="height: 50px;">copy</a>
                 </li>
+                -->
             </ul>
 
             <div data-role="header"><h1 data-translate="Filter">Filter</h1></div>
             <input type="text" data-type="search" id="div-posts-filter" data-translate="Filter" placeholder="Filter...">
 
+            <!--
             <div data-role="header"><h1 data-translate="Discussion">Diskussion</h1></div>
             <ul id="div-posts-meta" data-role="listview" data-inset="true" class="_collapsed" data-split-icon="info">
                 <li><a id="div-posts-course" href="#"></a><a href="#popInfoCourse" data-rel="popup" data-position-to="window"></a></li>
@@ -373,6 +379,7 @@
                 <li><a id="div-posts-discussion" href="#"></a></li>
                 <li><span id="div-posts-group"></span></li>
             </ul>
+            -->
         </div>
         <div data-role="popup" id="popInfoCourse" class="ui-content">
             <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
@@ -456,6 +463,7 @@
     </div>
 
     <div id="mainmenu" class="cache" data-role="panel" data-position="left" data-display="overlay" data-theme="a" data-position-fixed="true" style="padding: 0px; opacity: 0px; display: none; border-width: 0px;">
+        <!--
         <div data-role="header">
             <img src="img/nobody.jpg" class="user-foto" />
             <h1 style="margin-left: 40px; margin-right: 0px;">
@@ -463,8 +471,9 @@
                 <span class="user-lastname"></span>
             </h1>
         </div>
+        -->
         <!--<div class="user-foto image-as-background" style="position: absolute; top: 5px; left: 5px; width: 50px; height: 50px; background-size: 100% 100%; border-radius: 50%; margin-left: auto; margin-right: auto;"></div> -->
-        <div role="main">
+        <div role="main" style="margin-top: 1px;">
             <ul data-role="listview">
                 <li data-icon="comments-o"><a href="#" onclick="UI.navigate('#stream', 'mainmenu');" data-translate="Discussions">Diskussionen</a></li>
                 <li data-icon="group"><a href="#" onclick="UI.navigate('#conversations', 'mainmenu');" data-translate="Messages">Nachrichten</a></li>
