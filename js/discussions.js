@@ -207,6 +207,7 @@ var DISCUSSIONS = {
         var keys = Object.keys(discussions);
         keys.forEach(function(discussionid) {
             var odiscussion = discussions[discussionid];
+            odiscussion.discussionid = odiscussion.discussion;
             // If we do it like that we store the original userid as "openasuserid"
             if (typeof odiscussion.accessusers !== 'undefined') {
                 openasuserid = site.userid;
@@ -233,7 +234,7 @@ var DISCUSSIONS = {
                 var forumdynamic = sitedynamic.forums[odiscussion.forumid] || {};
                 var updatedsince = forumdynamic.updatedsince || 0;
                 if (updatedsince < odiscussion.timemodified) {
-                    sitedynamic.forums[discussion.forumid].updatedsince = odiscussion.timemodified;
+                    sitedynamic.forums[odiscussion.forumid].updatedsince = odiscussion.timemodified;
                     MOODLE.siteGetDynamic(site.hash, sitedynamic);
                 }
                 parseddiscussions[parseddiscussions.length] = odiscussion;
