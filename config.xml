@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget android-versionCode="40000" id="rschrenk.phonegap.edumessenger" version="4.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>eduMessenger</name>
+    <description>
+       Messenger App für educational purpose.
+    </description>
+    <author email="robert.schrenk@dibig.at" href="http://www.edumessenger.org">
+        Robert Schrenk
+    </author>
+    <content src="index.html?app" />
+    <access origin="*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-intent href="file:*" />
+    <allow-intent href="https:*" />
+    <allow-intent href="http:*" />
+    <preference name="StatusBarBackgroundColor" value="#ffffff" />
+    <preference name="StatusBarStyle" value="default" />
+    <preference name="Orientation" value="default" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="MediaPlaybackRequiresUserAction" value="false" />
+    <preference name="AllowInlineMediaPlayback" value="true" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
+    <feature name="StatusBar">
+        <param name="ios-package" onload="true" value="CDVStatusBar" />
+    </feature>
+    <feature name="CDVWKWebViewEngine">
+        <param name="ios-package" value="CDVWKWebViewEngine" />
+    </feature>
+    <icon src="res/icon-512.png" />
+    <icon density="ldpi" src="res/android/ldpi.png" />
+    <icon density="mdpi" src="res/android/mdpi.png" />
+    <icon density="hdpi" src="res/android/hdpi.png" />
+    <icon density="xhdpi" src="res/android/xhdpi.png" />
+    <platform name="android">
+        <preference name="StatusBarOverlaysWebView" value="true" />
+        <preference name="android-minSdkVersion" value="23" />
+        <preference name="android-targetSdkVersion" value="28" />
+        <preference name="android-build-tool" value="gradle" />
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="res/android/ldpi.png" />
+        <icon density="mdpi" src="res/android/mdpi.png" />
+        <icon density="hdpi" src="res/android/hdpi.png" />
+        <icon density="xhdpi" src="res/android/xhdpi.png" />
+        <splash density="land-ldpi" src="res/android/splash-land-ldpi.png" />
+        <splash density="land-mdpi" src="res/android/splash-land-mdpi.png" />
+        <splash density="land-hdpi" src="res/android/splash-land-hdpi.png" />
+        <splash density="land-xhdpi" src="res/android/splash-land-xhdpi.png" />
+        <splash density="port-ldpi" src="res/android/splash-port-ldpi.png" />
+        <splash density="port-mdpi" src="res/android/splash-port-mdpi.png" />
+        <splash density="port-hdpi" src="res/android/splash-port-hdpi.png" />
+        <splash density="port-xhdpi" src="res/android/splash-port-xhdpi.png" />
+    </platform>
+    <platform name="ios">
+        <preference name="StatusBarOverlaysWebView" value="false" />
+        <preference name="Orientation" value="all" />
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <icon height="29" src="res/ios/icon-29.png" width="29" />
+        <icon height="58" src="res/ios/icon-29@2x.png" width="58" />
+        <icon height="87" src="res/ios/icon-29@3x.png" width="87" />
+        <icon height="24" src="res/ios/icon-24.png" width="24" />
+        <icon height="48" src="res/ios/icon-24@2x.png" width="48" />
+        <icon height="40" src="res/ios/icon-20@2x.png" width="40" />
+        <icon height="60" src="res/ios/icon-20@3x.png" width="60" />
+        <icon height="55" src="res/ios/icon-27.5@2x.png" width="55" />
+        <icon height="40" src="res/ios/icon-40.png" width="40" />
+        <icon height="80" src="res/ios/icon-40@2x.png" width="80" />
+        <icon height="88" src="res/ios/icon-44@2x.png" width="88" />
+        <icon height="50" src="res/ios/icon-50.png" width="50" />
+        <icon height="100" src="res/ios/icon-50@2x.png" width="100" />
+        <icon height="57" src="res/ios/icon.png" width="57" />
+        <icon height="114" src="res/ios/icon@2x.png" width="114" />
+        <icon height="60" src="res/ios/icon-60.png" width="60" />
+        <icon height="120" src="res/ios/icon-60@2x.png" width="120" />
+        <icon height="180" src="res/ios/icon-60@3x.png" width="180" />
+        <icon height="72" src="res/ios/icon-72.png" width="72" />
+        <icon height="144" src="res/ios/icon-72@2x.png" width="144" />
+        <icon height="76" src="res/ios/icon-76.png" width="76" />
+        <icon height="152" src="res/ios/icon-76@2x.png" width="152" />
+        <icon height="167" src="res/ios/icon-83.5@2x.png" width="167" />
+        <icon height="172" src="res/ios/icon-86@2x.png" width="172" />
+        <icon height="196" src="res/ios/icon-98@2x.png" width="196" />
+        <icon height="29" src="res/ios/icon-small.png" width="29" />
+        <icon height="58" src="res/ios/icon-small@2x.png" width="58" />
+        <icon height="87" src="res/ios/icon-small@3x.png" width="87" />
+        <icon height="1024" src="res/ios/icon-1024.png" width="1024" />
+        <splash height="480" src="res/ios/Default~iphone.png" width="320" />
+        <splash height="960" src="res/ios/Default@2x~iphone.png" width="640" />
+        <splash height="1024" src="res/ios/Default-Portrait~ipad.png" width="768" />
+        <splash height="2048" src="res/ios/Default-Portrait@2x~ipad.png" width="1536" />
+        <splash height="768" src="res/ios/Default-Landscape~ipad.png" width="1024" />
+        <splash height="1536" src="res/ios/Default-Landscape@2x~ipad.png" width="2048" />
+        <splash height="1136" src="res/ios/Default-568h@2x~iphone.png" width="640" />
+        <splash height="1334" src="res/ios/Default-667h.png" width="750" />
+        <splash height="2208" src="res/ios/Default-736h.png" width="1242" />
+        <splash height="1242" src="res/ios/Default-Landscape-736h.png" width="2208" />
+        <config-file mode="replace" parent="CFBundleDocumentTypes" target="*-Info.plist">
+            <array>
+                <dict>
+                    <key>CFBundleTypeIconFiles</key>
+                    <array>
+                        <string>icon-small</string>
+                    </array>
+                    <key>CFBundleTypeName</key>
+                    <string>${PRODUCT_NAME}</string>
+                    <key>CFBundleTypeRole</key>
+                    <string>Viewer</string>
+                    <key>LSHandlerRank</key>
+                    <string>Alternate</string>
+                    <key>LSItemContentTypes</key>
+                    <array>
+                        <string>public.data</string>
+                        <string>public.text</string>
+                        <string>public.image</string>
+                        <string>public.audio</string>
+                        <string>public.audiovisual-content</string>
+                        <string>public.xml</string>
+                        <string>public.movie</string>
+                        <string>public.font</string>
+                        <string>com.adobe.postscript</string>
+                        <string>com.adobe.pdf</string>
+                        <string>org.gnu.gnu-zip-archve</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+        <config-file mode="replace" parent="UIFileSharingEnabled" target="*-Info.plist">
+            <true />
+        </config-file>
+        <config-file mode="replace" parent="NSPhotoUsageDescription" target="*-Info.plist">
+            <string>Used to upload and download images and videos</string>
+        </config-file>
+        <config-file mode="replace" parent="NSCameraUsageDescription" target="*-Info.plist">
+            <string>Camera is used to make profile fotos and to scan QR Codes</string>
+        </config-file>
+        <config-file mode="replace" parent="NSMicrophoneUsageDescription" target="*-Info.plist">
+            <string>Access to Microphone is used to create recordings in messages</string>
+        </config-file>
+        <config-file mode="replace" parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
+            <false />
+        </config-file>
+    </platform>
+    <platform name="windows">
+    </platform>
+    <platform name="wp8">
+    </platform>
+    <allow-navigation hap-rule="yes" href="https://messenger.dibig.at/*" />
+    <allow-navigation href="*" />
+    <engine name="ios" spec="^4.5.5" />
+    <plugin name="cordova-plugin-customurlscheme" spec="^4.4.0">
+        <variable name="URL_SCHEME" value="edm" />
+        <variable name="ANDROID_SCHEME" value=" " />
+        <variable name="ANDROID_HOST" value=" " />
+        <variable name="ANDROID_PATHPREFIX" value="/" />
+    </plugin>
+    <plugin name="cordova-plugin-device" spec="^2.0.3" />
+    <plugin name="cordova-plugin-device-name" spec="^1.3.5" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^3.1.0" />
+    <plugin name="cordova-plugin-keyboard" spec="^1.2.0" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.4" />
+    <plugin name="cordova-plugin-firebase" spec="^2.0.5" />
+</widget>
