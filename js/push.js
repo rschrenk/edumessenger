@@ -24,12 +24,22 @@ var PUSH = {
 			});
 
 			window.FirebasePlugin.hasPermission(function(data){
+                // For cordova-plugin-firebasex
+                if (!data) {
+                    window.FirebasePlugin.grantPermission();
+                }
+                // For cordova-plugin-firebase
+                /*
 				console.log(data.isEnabled);
 				if (!data.isEnabled) {
 					window.FirebasePlugin.grantPermission();
 				}
+                */
 			});
-			window.FirebasePlugin.onNotificationOpen(function(notification) {
+            // For corodva-plugin-firebase
+			//window.FirebasePlugin.onNotificationOpen(function(notification) {
+            // For corodva-plugin-firebasex
+            window.FirebasePlugin.onMessageReceived(function(notification) {
 			    console.log(notification);
 				// Experimental to prevent actions when app is open
 				if(typeof notification.tap !== 'undefined' && notification.tap) {

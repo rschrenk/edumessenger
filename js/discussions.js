@@ -52,17 +52,20 @@ var DISCUSSIONS = {
         // ATTENTION, check if this forum is accessible with other connected sites. If it is so provide a popup via a button on the right upper corner.
         // This also applies to posts. (and messages?)
 
-        if (forum.groupmode > 0) {
-            var sel = $('.group-selector').empty();
+        if (!empty(forum.cm.groupmode) && forum.cm.groupmode > 0) {
+            $('.group-selector-wrapper').css('display', 'block');
+            var sel = $('.group-selector:not([data-forforum="' + forum.id + '"])').empty();
             if (!empty(forum.canaccessallgroups) && forum.canaccessallgroups) {
                 $(sel).append($('<option value="-1">').html(language.t('All_groups')));
             }
             Object.keys(forum.groups).forEach(function(groupid){
                 var group = forum.groups[groupid];
-                $(sel).append($('<option value="' + groupid + '">').html(group.name));
+                $(sel).append($('<option value="' + group.id + '">').html(group.name));
             });
+            $('.group-selector:not([data-forcourse="' + course.id + '"])').attr('data-forforum', forum.id);
+        } else {
+            $('.group-selector-wrapper').css('display', 'none');
         }
-        $('.group-selector-wrapper').css('display', (forum.groupmode > 0) ? 'block' : 'none');
         try { $('.group-selector').each(function() { $(this).selectmenu('refresh'); }); } catch(e) {}
 
         var predecessor = undefined;

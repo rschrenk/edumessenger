@@ -224,9 +224,11 @@
             <!-- <a href="#discussions-panel-right" data-role="button" data-icon="gears" data-iconpos="notext" data-translate="Submenu">Submenu</a> -->
         </div>
         <div role="main" class="ui-content">
+            <!--
             <span class="group-selector-wrapper">
                 <select id="discussions-group-selector" class="group-selector" style="display: none;"></select>
             </span>
+            -->
             <ul id="ul-discussions" data-role="listview" data-filter="true" class="iconified" data-icon="false">
                 <li data-translate="loading">loading ...</li>
             </ul>
@@ -247,7 +249,7 @@
             <h1 data-translate="Add_discussion">Diskussion anlegen</h1>
         </div>
         <div role="main" class="ui-content" style="height: 100%;">
-            <span class="group-selector-wrapper">
+            <span class="group-selector-wrapper" style="display: none;">
                 <select id="discussion-add-group" name="discussion-add-group" class="group-selector"></select>
             </span>
 
@@ -258,7 +260,7 @@
             <a href="#" id="btn-discussion-add" onclick="DISCUSSIONS.post();" data-role="button" data-icon="plus" data-translate="Add_discussion" data-theme="b">Add Discussion</a>
             <div>
                 <div data-role="controlgroup" data-mini="true" class="checkable">
-                    <a href="#" data-role="button" id="discussion-add-resource" name="discussion-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-translate="Attach_resource">Ressource anfügen</a>
+                    <!-- <a href="#" data-role="button" id="discussion-add-resource" name="discussion-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-translate="Attach_resource">Ressource anfügen</a> -->
                     <!-- <a href="#attachments" data-role="button" data-icon="paperclip" data-translate="Attach_file">Datei anhängen</a> -->
                     <a href="#markdown" data-role="button" data-icon="code">Markdown</a>
                 </div>
