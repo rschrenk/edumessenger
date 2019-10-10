@@ -147,7 +147,7 @@
             <ul data-role="listview" id="conversation-members" data-iconpos="none" data-inset="true"></ul>
         </div>
         <div id="messages-add-box" data-role="footer" data-position="fixed">
-            <a href="#" id="btn-message-add-expand" class="ui-btn-left expander" onclick="UI.expand('#messages-add-box');" data-role="button" data-icon="carat-u" data-iconpos="notext" data-translate="Expand">Expand</a>
+            <a href="#" id="btn-message-add-expand" class="ui-btn-left expander" onclick="UI.alert(language.t('Feature_not_yet_working')); /*UI.expand('#messages-add-box');*/" data-role="button" data-icon="carat-u" data-iconpos="notext" data-translate="Expand">Expand</a>
             <textarea data-wrapper-class="controlgroup-textinput ui-btn" id="message-add" name="message-add" onkeyup="UI.addKeyUp(event)" style="background-color: rgba(255,255,255,0.6); margin-left: 40px; width: calc(100% - 90px);" data-role="none"></textarea>
             <a href="#" id="btn-message-add" class="ui-btn-right" onclick="CONVERSATIONS.createMessage();" data-role="button" data-icon="plus" data-theme="b" data-iconpos="notext" data-translate="Add_message">Add Message</a>
 
@@ -288,7 +288,7 @@
 
                 <div class="expand-hidden" style="position: absolute; left: 0px; top: 40px; height: 100%;">
                     <div data-role="controlgroup" style="width: 20px; margin-left: 3px;">
-                        <a href="#" data-role="button" id="post-add-resource" name="post-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-iconpos="notext" data-translate="Attach_resource">Ressource anfügen</a>
+                        <!-- <a href="#" data-role="button" id="post-add-resource" name="post-add-resource" data-icon="file-text" onclick="COURSES.showAttachResource();" data-iconpos="notext" data-translate="Attach_resource">Ressource anfügen</a> -->
                         <!-- <a href="#attachments" data-role="button" data-icon="paperclip" data-iconpos="notext" data-translate="Attach_file">Datei anhängen</a> -->
                     </div>
                 </div>
