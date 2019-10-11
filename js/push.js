@@ -42,17 +42,22 @@ var PUSH = {
             // For corodva-plugin-firebase
 			//window.FirebasePlugin.onNotificationOpen(function(notification) {
             // For corodva-plugin-firebasex
-            window.FirebasePlugin.onMessageReceived(function(notification) {
-			    console.log(notification);
-				// Experimental to prevent actions when app is open
-				if(typeof notification.tap !== 'undefined' && notification.tap) {
-					var courseid = parseInt(notification['gcm.notification.courseid']);
-					var iuserid = parseInt(notification['gcm.notification.iuserid']);
+            window.FirebasePlugin.onMessageReceived(function(n) {
+                console.log('FCM-Plugin.onMessageReceived(n)', n);
+                var navigate = (typeof n.tap !== 'undefined' && n.tap);
 
-					DB.setConfig('LAST_NOTIFICATION', notification);
-				} else {
-					CONNECTOR.stream();
-				}
+                var possiblesites = MOODLE.siteGet(n.wwwroot, -1);
+                var userids = Object.keys(possiblesites);
+                userids.forEach(function(userid){
+                    var site = possiblesites[userid];
+                    if (typeof n.discussionid !== 'undefined' && n.discussionid > 0) {
+                        POSTS.load(site.hash, n.courseid, n.forumid, n.discussionid);
+                    }
+                    if (typeof n.conversationid !== 'undefined' && n.conversationid > 0) {
+                        // Open the conversation
+                        CONVERSATIONS.load(site, undefined, n.conversationid);
+                    }
+                });
 			}, function(error) {
 			    console.error(error);
 			});

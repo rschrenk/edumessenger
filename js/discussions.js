@@ -1,5 +1,5 @@
 var DISCUSSIONS = {
-    debug: 6,
+    debug: 1,
     /**
      * Sets or checks if a forum is currently shown.
      */
@@ -261,7 +261,9 @@ var DISCUSSIONS = {
                         app.db.transaction('discussions', 'readonly').objectStore('discussions').get([site.hash, opendiscussionid]).onsuccess = function(event) {
                             var discussion = event.target.result;
                             if (discussion) {
-                                POSTS.show(site.wwwroot, openasuserid, discussion.courseid, discussion.forumid, discussion.discussionid, true);
+                                setTimeout(function(){
+                                    POSTS.show(site.wwwroot, openasuserid, discussion.courseid, discussion.forumid, discussion.discussionid, true);
+                                }, 100);
                             } else {
                                 console.error('Wanted to open opendiscussionid', opendiscussionid, 'but it still can not be found');
                             }

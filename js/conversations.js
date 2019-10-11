@@ -217,16 +217,16 @@ var CONVERSATIONS = {
             var cursor = event.target.result;
             if (cursor) {
                 var message = cursor.value;
+                var site = MOODLE.siteGet(message.sitehash);
+                var wwwroothash = site.wwwroot.hashCode();
 
-                if (typeof blocker[message.sitehash] === 'undefined') blocker[message.sitehash] = {};
-                if (typeof blocker[message.sitehash][message.conversationid] !== 'undefined') { cursor.continue(); return; }
+                if (typeof blocker[wwwroothash] === 'undefined') blocker[wwwroothash] = {};
+                if (typeof blocker[wwwroothash][message.conversationid] !== 'undefined') { cursor.continue(); return; }
                 counter++;
                 if (counter > maximum) { cursor.continue(); return; }
-                blocker[message.sitehash][message.conversationid] = true;
+                blocker[wwwroothash][message.conversationid] = true;
 
-                var site = MOODLE.siteGet(message.sitehash);
-
-                var li = $(ul).children('.sitewwwroot-' + site.wwwroot.hashCode() + '.conversation-' + message.conversationid);
+                var li = $(ul).children('.wwwroothash-' + wwwroothash + '.conversation-' + message.conversationid);
                 if (li.length === 0) {
                     li = $('<li>').append([
                         $('<a>').append([
@@ -239,7 +239,7 @@ var CONVERSATIONS = {
                             $('<p class="message">'),
                             $('<span class="ui-li-count datetime">'),
                         ]).attr('href', '#').attr('onclick', 'CONVERSATIONS.show("' + site.wwwroot + '", undefined, ' + message.conversationid + ', 1);'),
-                    ]).addClass('sitewwwroot-' + site.wwwroot.hashCode())
+                    ]).addClass('sitewwwroot-' + wwwroothash)
                       .addClass('conversation-' + message.conversationid)
                       .attr('data-modified', message.modified);
                     if (typeof predecessor === 'undefined') {
@@ -257,7 +257,7 @@ var CONVERSATIONS = {
                 $(li).find('.message').html(LIB.stripHTML(message.fullmessagehtml));
                 //$(li).find('.author').html(message.userfullname);
                 $(li).find('.datetime').html(UI.ts2time(message.timecreated, 'verbal'));
-                CONVERSATIONS.listStreamUser(li, site, message);
+                //CONVERSATIONS.listStreamUser(li, site, message);
                 cursor.continue();
             } else {
                 if (navigate) {
@@ -275,7 +275,7 @@ var CONVERSATIONS = {
                     sites.forEach(function(wwwroot) {
                         sites[wwwroot].forEach(function(site) {
                             if (!empty(site.hash)) {
-                                var priorto = $('#ul-stream .sitehash-' + site.hash).attr('data-modified') || Math.floor((new Date()).getTime() / 1000);
+                                var priorto = $('#ul-stream .wwwroothash-' + wwwroothash).attr('data-modified') || Math.floor((new Date()).getTime() / 1000);
                                 CONVERSATIONS.getConversations(site);
                             }
                         });
@@ -368,8 +368,8 @@ var CONVERSATIONS = {
             // if we were commanded to navigate there and we have a conversationid, make it active!
             if (!empty(navigate) && navigate && !empty(conversationid)) {
                 CONVERSATIONS.active(site.hash, conversationid, true);
-                CONVERSATIONS.load(site, undefined, conversationid);
             }
+            CONVERSATIONS.load(site, undefined, conversationid);
             CONVERSATIONS.list(site.hash, conversationid, navigate);
         } else {
             var possiblesites = MOODLE.siteGet(wwwroot, -1);

@@ -176,16 +176,18 @@ var POSTS = {
             var cursor = event.target.result;
             if (cursor) {
                 var post = cursor.value;
-                if (typeof blocker[post.sitehash] === 'undefined') blocker[post.sitehash] = {};
-                if (typeof blocker[post.sitehash][post.discussionid] !== 'undefined') { cursor.continue(); return; }
+                var site = MOODLE.siteGet(post.sitehash);
+                var wwwroothash = site.wwwroot.hashCode();
+
+                if (typeof blocker[wwwroothash] === 'undefined') blocker[wwwroothash] = {};
+                if (typeof blocker[wwwroothash][post.discussionid] !== 'undefined') { cursor.continue(); return; }
                 counter++;
                 if (counter > maximum) { cursor.continue(); return; }
-                blocker[post.sitehash][post.discussionid] = true;
+                blocker[wwwroothash][post.discussionid] = true;
 
-                var site = MOODLE.siteGet(post.sitehash);
                 var userpictureurl = !empty(post.userpictureurl) ? MOODLE.enhanceURL(site, post.userpictureurl) : '';
 
-                var li = $(ul).children('.sitehash-' + post.sitehash + '.discussion-' + post.discussionid);
+                var li = $(ul).children('.wwwroothash-' + wwwroothash + '.discussion-' + post.discussionid);
                 if (li.length === 0) {
                     li = $('<li>').append([
                         $('<a>').append([
@@ -199,6 +201,7 @@ var POSTS = {
                             $('<span class="ui-li-count datetime">'),
                         ]).attr('href', '#').attr('onclick', 'POSTS.show("' + site.wwwroot + '", 0, ' + post.courseid + ', ' + post.forumid + ', ' + post.discussionid + ', 1);'),
                     ]).addClass('sitehash-' + post.sitehash)
+                      .addClass('wwwroothash-' + wwwroothash)
                       .addClass('discussion-' + post.discussionid)
                       .attr('data-modified', post.modified);
                     if (typeof predecessor === 'undefined') {
@@ -476,11 +479,13 @@ var POSTS = {
             var islast = (lastpostid == post.postid);
             store.put(post).onsuccess = function(){
                 if (islast) {
-                    // Try this on the last post only - refreshes page if we are viewing one discussion.
-                    POSTS.list(site.hash, post.courseid, post.forumid, post.discussionid);
-                    // Furthermore refresh stream.
-                    // If we were given a maximum it means we should use this.
-                    POSTS.listStream(payload.maximum || 30);
+                    setTimeout(function(){
+                        // Try this on the last post only - refreshes page if we are viewing one discussion.
+                        POSTS.list(site.hash, post.courseid, post.forumid, post.discussionid);
+                        // Furthermore refresh stream.
+                        // If we were given a maximum it means we should use this.
+                        POSTS.listStream(payload.maximum || 30);
+                    },100);
                 }
             };
         }

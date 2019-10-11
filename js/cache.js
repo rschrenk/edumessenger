@@ -34,7 +34,7 @@ var CACHE = {
         } else if(isLocal) {
             if (CACHE.debug > 0) console.log('LOCAL: loading ' + app.URL_ROOT + '/body.php only');
             $.ajax({
-                url: app.URL_ROOT+'/body.php',
+                url: app.URL_ROOT + '/body.php',
                 type: 'GET',
                 cache: false,
                 encoding: 'UTF-8',

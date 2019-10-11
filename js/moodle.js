@@ -1,5 +1,5 @@
 var MOODLE = {
-    debug: 5,
+    debug: 1,
     requires: 2018110600, // This is the minimum version of the plugin required to work!
 
     /**
