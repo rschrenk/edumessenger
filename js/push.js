@@ -10,6 +10,7 @@ var PUSH = {
 				console.log('GOT_FCM_TOKEN',token);
 				localStorage.setItem('GOT_FCM_TOKEN', token);
                 CENTRAL.device.pushid = token;
+                CENTRAL.announceDevice();
 			}, function(error) {
 				console.error(error);
 			});
@@ -19,12 +20,14 @@ var PUSH = {
 				console.log('GOT_FCM_TOKEN_REFRESHED',token);
 				localStorage.setItem('GOT_FCM_TOKEN_REFRESHED', token);
 				CENTRAL.device.pushid = token;
+                CENTRAL.announceDevice();
 			}, function(error) {
 				console.error(error);
 			});
 
 			window.FirebasePlugin.hasPermission(function(data){
                 // For cordova-plugin-firebasex
+                console.log('FCM-Plugin.hasPermission(data)', data);
                 if (!data) {
                     window.FirebasePlugin.grantPermission();
                 }
