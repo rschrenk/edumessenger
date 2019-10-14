@@ -65,7 +65,12 @@ var UI = {
      * Initialize the UI.
      */
     init: function() {
-        try { window.open = cordova.InAppBrowser.open; } catch(e) {}
+        if (typeof cordova.InAppBrowser !== 'undefined') {
+            if (UI.debug > 0) console.log('Replacing window.open with cordova.inAppBrowser.open');
+            window.open = cordova.InAppBrowser.open;
+        } else {
+            if (UI.debug > 0) console.error('No cordova.InAppBrowser available');
+        }
         if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
             // This fixes the overlay of the keyboard on android devices.
             $('input, textarea').focus(function() { console.log('FOCUS'); try { StatusBar.show(); } catch(e) {} });

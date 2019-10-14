@@ -126,7 +126,7 @@ var POSTS = {
                 divP.removeClass('flag-removable');
                 $(divP).find('.author').html(post.userfullname || language.t('Unknown'));
                 $(divP).find('.datetime').html(UI.ts2time(post.created, true));
-                $(divP).find('.message').html(LIB.injectHTML(post.message));
+                $(divP).find('.message').html(LIB.injectHTML(post.message, site));
                 //$(divP).find('.attachments').html(post.message);
 
                 // Update this section
@@ -179,47 +179,49 @@ var POSTS = {
                 var site = MOODLE.siteGet(post.sitehash);
                 var wwwroothash = site.wwwroot.hashCode();
 
-                if (typeof blocker[wwwroothash] === 'undefined') blocker[wwwroothash] = {};
-                if (typeof blocker[wwwroothash][post.discussionid] !== 'undefined') { cursor.continue(); return; }
-                counter++;
-                if (counter > maximum) { cursor.continue(); return; }
-                blocker[wwwroothash][post.discussionid] = true;
+                if (typeof post.deleted === 'undefined' || post.deleted == 0) {
+                    if (typeof blocker[wwwroothash] === 'undefined') blocker[wwwroothash] = {};
+                    if (typeof blocker[wwwroothash][post.discussionid] !== 'undefined') { cursor.continue(); return; }
+                    counter++;
+                    if (counter > maximum) { cursor.continue(); return; }
+                    blocker[wwwroothash][post.discussionid] = true;
 
-                var userpictureurl = !empty(post.userpictureurl) ? MOODLE.enhanceURL(site, post.userpictureurl) : '';
+                    var userpictureurl = !empty(post.userpictureurl) ? MOODLE.enhanceURL(site, post.userpictureurl) : '';
 
-                var li = $(ul).children('.wwwroothash-' + wwwroothash + '.discussion-' + post.discussionid);
-                if (li.length === 0) {
-                    li = $('<li>').append([
-                        $('<a>').append([
-                            $('<img class="userpicture" alt="User">'),
-                            $('<h3>').append([
-                                $('<span class="author">'),
-                                //$('<span>').html(' > '),
-                                //$('<span class="subject">'),
-                            ]),
-                            $('<p class="message">'),
-                            $('<span class="ui-li-count datetime">'),
-                        ]).attr('href', '#').attr('onclick', 'POSTS.show("' + site.wwwroot + '", 0, ' + post.courseid + ', ' + post.forumid + ', ' + post.discussionid + ', 1);'),
-                    ]).addClass('sitehash-' + post.sitehash)
-                      .addClass('wwwroothash-' + wwwroothash)
-                      .addClass('discussion-' + post.discussionid)
-                      .attr('data-modified', post.modified);
-                    if (typeof predecessor === 'undefined') {
-                        ul.append(li);
-                    } else {
-                        if (predecessor.attr('data-modified') != li.prev().attr('data-modified')) {
-                            li.insertAfter(predecessor);
+                    var li = $(ul).children('.wwwroothash-' + wwwroothash + '.discussion-' + post.discussionid);
+                    if (li.length === 0) {
+                        li = $('<li>').append([
+                            $('<a>').append([
+                                $('<img class="userpicture" alt="User">'),
+                                $('<h3>').append([
+                                    $('<span class="author">'),
+                                    //$('<span>').html(' > '),
+                                    //$('<span class="subject">'),
+                                ]),
+                                $('<p class="message">'),
+                                $('<span class="ui-li-count datetime">'),
+                            ]).attr('href', '#').attr('onclick', 'POSTS.show("' + site.wwwroot + '", 0, ' + post.courseid + ', ' + post.forumid + ', ' + post.discussionid + ', 1);'),
+                        ]).addClass('sitehash-' + post.sitehash)
+                          .addClass('wwwroothash-' + wwwroothash)
+                          .addClass('discussion-' + post.discussionid)
+                          .attr('data-modified', post.modified);
+                        if (typeof predecessor === 'undefined') {
+                            ul.append(li);
+                        } else {
+                            if (predecessor.attr('data-modified') != li.prev().attr('data-modified')) {
+                                li.insertAfter(predecessor);
+                            }
                         }
+                        try { $(li).trigger('create'); } catch(e) {}
                     }
-                    try { $(li).trigger('create'); } catch(e) {}
+                    predecessor = li;
+                    li.removeClass('flag-removable');
+                    $(li).find('.userpicture').attr('src', userpictureurl).attr('alt', post.userfullname || language.t('Unknown'));
+                    $(li).find('.message').html(LIB.stripHTML(post.message));
+                    $(li).find('.author').html(post.userfullname);
+                    $(li).find('.datetime').html(UI.ts2time(post.created, 'verbal'));
+                    DISCUSSIONS.fillDiscussionData(post.sitehash, post.discussionid, li, { subject: 'subject' });
                 }
-                predecessor = li;
-                li.removeClass('flag-removable');
-                $(li).find('.userpicture').attr('src', userpictureurl).attr('alt', post.userfullname || language.t('Unknown'));
-                $(li).find('.message').html(LIB.stripHTML(post.message));
-                $(li).find('.author').html(post.userfullname);
-                $(li).find('.datetime').html(UI.ts2time(post.created, 'verbal'));
-                DISCUSSIONS.fillDiscussionData(post.sitehash, post.discussionid, li, { subject: 'subject' });
 
                 cursor.continue();
             } else {
@@ -338,6 +340,26 @@ var POSTS = {
             identifier: 'create_post_' + site.wwwroot + '_' + site.userid + '_' + discussionid,
             site: site,
         }, true);
+    },
+    /**
+     * Remove particular post.
+     * @param site
+     * @param postid
+     */
+    removePost: function(site, postid) {
+        if (POSTS.debug > 0) console.log('POSTS.removePost(site, postid)', site, postid);
+        app.db.transaction('posts', 'readonly').objectStore('posts').get([site.hash, postid]).onsuccess = function(event) {
+            var post = event.result;
+            app.db.transaction('posts', 'readwrite').objectStore('posts').delete([site.hash, postid]).onsuccess = function(){
+                POSTS.listStream();
+                if (post && post.id) {
+                    POSTS.show(site.wwwroot, site.userid, post.courseid, post.forumid, post.discussionid, false);
+                    DISCUSSIONS.show(site.wwwroot, site.userid, post.courseid, post.forumid, false);
+                }
+            };
+
+        }
+
     },
     /**
      * Do everything to show all posts of a specific discussion.

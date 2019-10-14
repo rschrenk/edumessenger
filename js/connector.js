@@ -256,6 +256,11 @@ var CONNECTOR = {
                 var course = site.courses[o.data.courseid];
                 var forum = course.forums[o.data.forumid];
                 var discussion = o.result.discussion;
+
+
+                if (typeof o.result.command !== 'undefined' && o.result.command == 'remove_this_discussion') {
+                    DISCUSSIONS.removeDiscussion(site, o.data.discussionid);
+                }
                 if (typeof discussion !== 'undefined') {
                     DISCUSSIONS.store(site, [discussion]);
                 }

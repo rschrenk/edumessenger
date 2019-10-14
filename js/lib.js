@@ -81,9 +81,10 @@ var LIB = {
     /**
      * Detect links, let external sites open in inapp browser and enhance attachments to be loaded with wstoken.
      */
-    injectHTML: function(html) {
+    injectHTML: function(html, site) {
 		if (UI.debug > 5) console.log('UI.injectHTML(html)', html);
 		html = html.replace("&nbsp;", " ");
+        // We convert markdown to html using showdown.
 		if (typeof showdown !== 'undefined') {
 			var converter = new showdown.Converter();
 			converter.setOption('headerLevelStart', 3);
@@ -99,8 +100,9 @@ var LIB = {
 		}
 
 		var captures = [];
-		var el = $('<div>').html(html);
+
 		//console.log('Before', el.clone());
+        var el = $('<div>').html(html);
 		el.find('*[href],*[src]').each(function(){
 			var i = captures.length;
 			if ($(this).attr('href')) {
@@ -127,6 +129,18 @@ var LIB = {
 				$(this).attr('src', captures[$(this).attr('data-edm-injection-src')]).attr('data-edm-injection-src', undefined);
 			}
 		});
+        // Let all links open in systembrowser.
+        el.find('*[href]:not(.edm6_injected),*[src]:not(.edm6_injected)').each(function(){
+            // Ensure that links are opened in an external browser.
+            if ($(this).attr('href')) {
+                var onclick = (typeof $(this).attr('onclick') !== 'undefined') ? $(this).attr('onclick') + '; ' : '';
+                $(this).attr('onclick', onclick + "window.open('" + MOODLE.enhanceURL(site, $(this).attr('href'), true) + "', '_system'); return false;");
+            }
+            // Append wstoken for images and such.
+            if ($(this).attr('src')) {
+                $(this).attr('src', MOODLE.enhanceURL(site, $(this).attr('src'), false));
+            }
+        });
 		//console.log('After', el.clone());
 		if (UI.debug > 5) console.log('UI.injectHTML(html) - at end', $(el).html().trim());
 		return $(el).html().trim();

@@ -6,21 +6,26 @@ var MOODLE = {
      * Add the wstoken as paramter to an internal url. URL must start with wwwroot.
      * @param identifier site-object or sitehash
      * @param url the url to enhance.
+     * @param autologin if true use MOODLE.getLaunchURL for internal sites.
      * @return enhanced url.
      */
-    enhanceURL: function(identifier, url) {
-        if (MOODLE.debug > 8) console.log('MOODLE.enhanceURL(identifier, url)', identifier, url);
+    enhanceURL: function(identifier, url, autologin) {
+        if (MOODLE.debug > 8) console.log('MOODLE.enhanceURL(identifier, url, autologin)', identifier, url, autologin);
         var site = MOODLE.siteGet(identifier);
         if (empty(url)) return url;
         if (typeof site.wstoken === 'undefined' || empty(site.wstoken.wstoken)) return url;
         if (!url.startsWith(site.wwwroot)) return url;
-        if (url.indexOf('?') > 0) {
-            url += '&token=' + site.wstoken.wstoken;
+        if (typeof autologin !== 'undefined' && autologin) {
+            return MOODLE.getLaunchURL(site.hash, url);
         } else {
-            url += '?token=' + site.wstoken.wstoken;
+            if (url.indexOf('?') > 0) {
+                url += '&token=' + site.wstoken.wstoken;
+            } else {
+                url += '?token=' + site.wstoken.wstoken;
+            }
+            url = url.replace(site.wwwroot + '/pluginfile.php', site.wwwroot + '/webservice/pluginfile.php');
+            return url;
         }
-        url = url.replace(site.wwwroot + '/pluginfile.php', site.wwwroot + '/webservice/pluginfile.php');
-        return url;
     },
 
     getCoursesScheduled: function(ms, identifier, userid) {
@@ -307,7 +312,7 @@ var MOODLE = {
         }
         urllaunch = url + '/local/eduauth/login.php?act=login&token=' + edmtoken + '&appid=' + DB.appid;
         console.log(' => opening ', urllaunch);
-        iab = window.open(urllaunch, '_blank', 'location=yes,hidenavigationbuttons=yes,hideurlbar=yes,toolbar=no,clearsessioncache=yes');
+        iab = window.open(encodeURI(urllaunch), '_blank', 'location=yes,hidenavigationbuttons=yes,hideurlbar=yes,toolbar=no,clearcache=yes,clearsessioncache=yes');
         iab.addEventListener('exit', function(event) {
             if (typeof MOODLE.currenttimeout !== 'undefined') {
                 console.log('=> Clearing Timeout');

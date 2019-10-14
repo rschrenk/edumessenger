@@ -180,6 +180,53 @@ var DISCUSSIONS = {
         }, true);
     },
     /**
+     * Remove an entire discussion and its post.
+     * @param sitehash sitehash or site.
+     * @param discussionid
+     */
+    removeDiscussion: function(sitehash, discussionid) {
+        if (DISCUSSIONS.debug > 3) { console.log('DISCUSSIONS.removeDiscussion(sitehash, discussionid)', sitehash, discussionid); }
+        var site = MOODLE.siteGet(sitehash);
+        var discussions_removed = false, posts_removed = false;
+
+        app.db.transaction('discussions', 'readonly').objectStore('discussions').get([site.hash, discussionid]).onsuccess = function(event) {
+            var discussion = event.result;
+            var pstore = app.db.transaction('discussions', 'readwrite').objectStore('discussions');
+            var pdestroy = pstore.index('sitehash_discussionid').openKeyCursor(IDBKeyRange.only([site.hash, discussionid]));
+            pdestroy.onsuccess = function() {
+                var cursor = pstore.result;
+                if (cursor) {
+                    pstore.delete(cursor.primaryKey);
+                    cursor.continue;
+                } else {
+                    discussions_removed = true;
+                    if (posts_removed) {
+                        DISCUSSIONS.removeDiscussionAfter(site, discussion);
+                    }
+                }
+            };
+            var pstore = app.db.transaction('posts', 'readwrite').objectStore('posts');
+            var pdestroy = pstore.index('sitehash_discussionid_modified').openKeyCursor(IDBKeyRange.bound([site.hash, discussionid, 0], [site.hash, discussionid, LIB.k9]));
+            pdestroy.onsuccess = function() {
+                var cursor = pstore.result;
+                if (cursor) {
+                    pstore.delete(cursor.primaryKey);
+                    cursor.continue;
+                } else {
+                    posts_removed = true;
+                    if (discussions_removed) {
+                        DISCUSSIONS.removeDiscussionAfter(site, discussion);
+                    }
+                }
+            };
+        };
+    },
+    removeDiscussionAfter: function(site, discussion) {
+        DISCUSSIONS.show(site.wwwroot, site.userid, discussion.courseid, discussion.forumid, false);
+        POSTS.show(site.wwwroot, site.userid, discussion.courseid, discussion.forumid, discussion.discussionid, false);
+        POSTS.listStream();
+    },
+    /**
      * Do everything to show all discussions of a specific forum.
      */
     show: function(sitehash, courseid, forumid, navigate) {

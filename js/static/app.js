@@ -126,10 +126,13 @@ var pluginhost = {
 		registrationId: undefined,
 		push: undefined,
 		init: function(params){
+            console.error('YES WE USE pluginhost.pluginpush.init(params)', params);
+            // Is this still in use???
+            /*
             if (typeof window.PushNotification !== 'undefined') {
                 console.error('Notification is supported via PushPlugin');
 				pluginhost.pluginpush.push = PushNotification.init(params);
-				PUSH.postInit();
+				PUSH.postInit('plugin');
 			} else {
 				console.error("PushNotification not supported via PushPlugin");
 			}
@@ -139,6 +142,7 @@ var pluginhost = {
 			} else if (Notification.permission === "granted") {
 				// If it's okay let's create a notification
 				console.log('Notification was permitted via Browser');
+                PUSH.postInit('web');
 			} else if (Notification.permission !== 'denied') {
 				// Otherwise, we need to ask the user for permission
 				console.log('Notification was denied via Browser - requesting Permission');
@@ -146,9 +150,11 @@ var pluginhost = {
 					// If the user accepts, let's create a notification
 					if (permission === "granted") {
 						//alert('Thanks for granting permission - but this feature will be implemented in the future');
+                        PUSH.postInit('web');
 					}
 				});
             }
+            */
 		},
         registration: function(data) {
             console.log('GOT REGISTRATION DATA');

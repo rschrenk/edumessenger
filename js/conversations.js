@@ -181,7 +181,7 @@ var CONVERSATIONS = {
                 divP.removeClass('flag-removable');
                 $(divP).find('.author').html(message.userfullname || language.t('Unknown'));
                 $(divP).find('.datetime').html(UI.ts2time(message.timecreated, true));
-                $(divP).find('.message').html(LIB.injectHTML(message.fullmessagehtml));
+                $(divP).find('.message').html(LIB.injectHTML(message.fullmessagehtml, site));
                 //$(divP).find('.attachments').html(post.message);
 
                 predecessor = divP;
