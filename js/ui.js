@@ -65,7 +65,7 @@ var UI = {
      * Initialize the UI.
      */
     init: function() {
-        if (typeof cordova.InAppBrowser !== 'undefined') {
+        if (typeof cordova !== 'undefined' && typeof cordova.InAppBrowser !== 'undefined') {
             if (UI.debug > 0) console.log('Replacing window.open with cordova.inAppBrowser.open');
             window.open = cordova.InAppBrowser.open;
         } else {
@@ -81,6 +81,9 @@ var UI = {
 			$(this).bind('swipeleft swiperight', function( e ) {
 				LIB.captureSwipe(e);
 			});
+		});
+        $(document).find('div[data-role="page"] div[role="main"]').each(function(){
+			$(this).prepend('<div class="loading-spinner" style="height: 40px;"><center><img src="img/ajax-spinner.gif" alt="loading ..." style="height: 100%;"></center></div>');
 		});
     },
     /**

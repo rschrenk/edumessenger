@@ -1,5 +1,5 @@
 var CONVERSATIONS = {
-    debug: 10,
+    debug: 1,
     /**
      * Sets or checks if a conversation is currently shown.
      */
@@ -94,9 +94,9 @@ var CONVERSATIONS = {
      */
     list: function(sitehash, conversationid, navigate) {
         navigate = navigate || false;
-        if (CONVERSATIONS.debug > 0) { console.log('CONVERSATIONS.list(sitehash, conversationid, navigate)', sitehash, conversationid, navigate); }
+        if (CONVERSATIONS.debug > 1) { console.log('CONVERSATIONS.list(sitehash, conversationid, navigate)', sitehash, conversationid, navigate); }
         if (!CONVERSATIONS.active(sitehash, conversationid)) {
-            if (CONVERSATIONS.debug > 0) { console.log(' => ABORTED, not active'); }
+            if (CONVERSATIONS.debug > 3) { console.log(' => ABORTED, not active'); }
             return;
         }
         var site = MOODLE.siteGet(sitehash);
@@ -105,7 +105,7 @@ var CONVERSATIONS = {
 
         var predecessor = undefined;
         var div = $('#div-conversation');
-        div.children('div:not(.loading)').addClass('flag-removable');
+        div.children('div').addClass('flag-removable');
         var index = 'sitehash_conversationid_modified';
         var range = IDBKeyRange.bound([sitehash, conversationid, 0], [sitehash, conversationid, LIB.k9]);
 
@@ -369,7 +369,7 @@ var CONVERSATIONS = {
             if (!empty(navigate) && navigate && !empty(conversationid)) {
                 CONVERSATIONS.active(site.hash, conversationid, true);
             }
-            CONVERSATIONS.load(site, undefined, conversationid);
+            setTimeout(function(){ CONVERSATIONS.load(site, undefined, conversationid); },100);
             CONVERSATIONS.list(site.hash, conversationid, navigate);
         } else {
             var possiblesites = MOODLE.siteGet(wwwroot, -1);
@@ -425,7 +425,7 @@ var CONVERSATIONS = {
      */
     store: function(site, conversations) {
         if (CONVERSATIONS.debug > 3) { console.log('CONVERSATIONS.store(site, conversations)', site, conversations); }
-        var sitedynamic = MOODLE.siteGetDynamic(site.hash);
+
         var store_conversations = app.db.transaction('conversations', 'readwrite').objectStore('conversations');
         var store_messages = app.db.transaction('messages', 'readwrite').objectStore('messages');
 
@@ -438,6 +438,7 @@ var CONVERSATIONS = {
                 sitehash: site.hash,
                 wwwroot: site.wwwroot,
             };
+
             store_conversations.put(conversation).onsuccess = function(event) { CONVERSATIONS.storeCountModify(site, -1); };
             CONVERSATIONS.storeMessages(site, conversations[convid].messages);
         });
@@ -454,18 +455,23 @@ var CONVERSATIONS = {
         if (CONVERSATIONS.storeCount[site.hash] == 0) {
             CONVERSATIONS.listStream(30, false);
         }
+
+        if (CONVERSATIONS.debug > 3) console.log('Reloading this conversations view in 100ms');
+        setTimeout(function() { CONVERSATIONS.list(site.hash, +$('#conversations').attr('data-conversationid'), false); }, 100);
+        /*
         // Determine if this conversation is currently viewed.
         var sites = DB.getConfig('sites');
         var sitehash = $('#conversations').attr('data-sitehash');
         var wwwroot = sites.hashcodes[site.hash].wwwroot;
         var conversationid = +$('#conversations').attr('data-conversationid');
         var userid = +$('#conversations').attr('data-userid');
-        console.log(sitehash, wwwroot, conversationid, userid);
+        //console.log(sitehash, wwwroot, conversationid, userid);
         if (wwwroot != '' && conversationid > 0 && userid > 0) {
             // This short timeout is necessary to let the last database finish the last put.
             if (CONVERSATIONS.debug > 3) console.log('Reloading this conversations view in 100ms');
-            setTimeout(function() { CONVERSATIONS.show(wwwroot, userid, conversationid, false); }, 100);
+            setTimeout(function() { CONVERSATIONS.list(site.hash, conversationid, false); }, 100);
         }
+        */
     },
     /**
      * Stores messages (normally for a particular conversation).
@@ -477,10 +483,29 @@ var CONVERSATIONS = {
         var store_messages = app.db.transaction('messages', 'readwrite').objectStore('messages');
         CONVERSATIONS.storeCountModify(site, Object.keys(messages).length);
 
+        var sitedynamic = MOODLE.siteGetDynamic(site.hash);
+
         Object.keys(messages).forEach(function(messageid) {
             var message = messages[messageid];
             message.modified = message.timecreated;
             message.sitehash = site.hash;
+
+            var storedynamic = false;
+            if (typeof sitedynamic.lastknownmodified === 'undefined') sitedynamic.lastknownmodified = 0;
+            if (sitedynamic.lastknownmodified < message.modified) {
+                sitedynamic.lastknownmodified = message.modified;
+                storedynamic = true;
+            }
+
+            if (typeof sitedynamic.conversations === 'undefined') sitedynamic.conversations = {};
+            if (typeof sitedynamic.conversations[message.conversationid] === 'undefined') sitedynamic.conversations[message.conversationid] = { updatedsince: 0 };
+            if (sitedynamic.conversations[message.conversationid] < message.modified) {
+                sitedynamic.conversations[message.conversationid].updatedsince = message.modified;
+                storedynamic = true;
+            }
+            if (storedynamic) {
+                MOODLE.siteGetDynamic(site.hash, null, sitedynamic);
+            }
             store_messages.put(message).onsuccess = function(event) {
                 CONVERSATIONS.storeCountModify(site, -1);
             }

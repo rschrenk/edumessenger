@@ -70,7 +70,7 @@ var DISCUSSIONS = {
 
         var predecessor = undefined;
         var ul = $('#ul-discussions');
-        ul.children('li:not(.loading)').addClass('flag-removable');
+        ul.children('li').addClass('flag-removable');
         var index = 'sitehash_forumid_modified';
         var range = IDBKeyRange.bound([site.hash, forumid, 0], [site.hash, forumid, LIB.k9]);
         groupid = groupid || -1;
@@ -133,8 +133,6 @@ var DISCUSSIONS = {
         }
         var forum = site.courses[courseid].forums[forumid];
         var updatedsince = forum.updatedsince || 0;
-
-        $('#ul-discussions').prepend($('<li class="loading">').html(language.t('loading')));
 
         CONNECTOR.schedule({
             data: {
@@ -248,7 +246,6 @@ var DISCUSSIONS = {
      */
     store: function(site, discussions, opendiscussionid) {
         if (DISCUSSIONS.debug > 3) { console.log('DISCUSSIONS.store(site, discussions, opendiscussionid)', site, discussions, opendiscussionid); }
-        $('#ul-discussions .loading').remove();
         var sitedynamic = MOODLE.siteGetDynamic(site.hash);
         var openasuserid = 0;
 

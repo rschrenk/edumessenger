@@ -66,21 +66,23 @@ var POSTS = {
         // ATTENTION, check if this forum is accessible with other connected sites. If it is so provide a popup via a button on the right upper corner.
         // This also applies to posts. (and messages?)
 
-        if (!empty(forum.cm.groupmode) && forum.cm.groupmode > 0) {
-            $('.group-selector-wrapper').css('display', 'block');
-            var sel = $('.group-selector:not([data-forforum="' + forum.id + '"])').empty();
-            if (!empty(forum.canaccessallgroups) && forum.canaccessallgroups) {
-                $(sel).append($('<option value="-1">').html(language.t('All_groups')));
+        setTimeout(function(){
+            if (!empty(forum.cm.groupmode) && forum.cm.groupmode > 0) {
+                $('.group-selector-wrapper').css('display', 'block');
+                var sel = $('.group-selector:not([data-forforum="' + forum.id + '"])').empty();
+                if (!empty(forum.canaccessallgroups) && forum.canaccessallgroups) {
+                    $(sel).append($('<option value="-1">').html(language.t('All_groups')));
+                }
+                Object.keys(forum.groups).forEach(function(groupid){
+                    var group = forum.groups[groupid];
+                    $(sel).append($('<option value="' + group.id + '">').html(group.name));
+                });
+                $('.group-selector:not([data-forcourse="' + course.id + '"])').attr('data-forforum', forum.id);
+            } else {
+                $('.group-selector-wrapper').css('display', 'none');
             }
-            Object.keys(forum.groups).forEach(function(groupid){
-                var group = forum.groups[groupid];
-                $(sel).append($('<option value="' + group.id + '">').html(group.name));
-            });
-            $('.group-selector:not([data-forcourse="' + course.id + '"])').attr('data-forforum', forum.id);
-        } else {
-            $('.group-selector-wrapper').css('display', 'none');
-        }
-        try { $('.group-selector').each(function() { $(this).selectmenu('refresh'); }); } catch(e) {}
+            try { $('.group-selector').each(function() { $(this).selectmenu('refresh'); }); } catch(e) {}
+        }, 500);
 
         var predecessor = undefined;
         var div = $('#div-posts');
@@ -261,8 +263,6 @@ var POSTS = {
         var discussiondynamic = (typeof sitedynamic.discussions !== 'undefined' && typeof sitedynamic.discussions[discussionid] !== 'undefined') ? sitedynamic.discussions[discussionid] : {};
         var updatedsince = discussiondynamic.updatedsince || 0;
 
-        $('#div-posts').prepend($('<li class="loading">').html(language.t('loading')));
-
         CONNECTOR.schedule({
             data: {
                 act: 'get_posts',
@@ -289,7 +289,8 @@ var POSTS = {
         if (POSTS.debug > 0) { console.log('POSTS.loadStream(sitehash, lastknownmodified, offset, limit, ordering, priorto, payload)', sitehash, lastknownmodified, offset, limit, ordering, priorto, payload); }
         var site = MOODLE.siteGet(sitehash);
         if (typeof site === 'undefined') {
-            UI.alert(language.t('Unkown_error_occurred'));
+            if (POSTS.debug > 0) console.error(' => NOT SUCH SITE FOUND FOR HASH ', sitehash);
+            //UI.alert(language.t('Unkown_error_occurred'));
             return;
         }
         if (typeof lastknownmodified === 'undefined') {
@@ -300,11 +301,7 @@ var POSTS = {
         ordering = ordering || 'ASC';
         limit = limit || 100;
         payload = payload || {};
-        priorto = priorto || -1;
-
-        if ($('#ul-stream .loading').length == 0) {
-            $('#ul-stream').prepend($('<li class="loading">').html(language.t('loading')));
-        }
+        priorto = priorto || 0;
 
         CONNECTOR.schedule({
             data: {
@@ -381,8 +378,8 @@ var POSTS = {
             if (!empty(navigate) && navigate && !empty(discussionid)) {
                 POSTS.active(site.hash, discussionid, true);
             }
-            POSTS.load(site.hash, courseid, forumid, discussionid);
             POSTS.list(site.hash, courseid, forumid, discussionid, undefined, navigate);
+            setTimeout(function(){ POSTS.load(site.hash, courseid, forumid, discussionid); },50);
         } else {
             var possiblesites = MOODLE.siteGet(wwwroot, -1);
             var userids = Object.keys(possiblesites);
@@ -488,12 +485,21 @@ var POSTS = {
             var post = posts[keys[a]];
             post.sitehash = site.hash;
             if (typeof post.postid === 'undefined') post.postid = post.id;
-            var discussiondynamic = (typeof sitedynamic.discussions !== 'undefined' && typeof sitedynamic.discussions[post.id] !== 'undefined') ? sitedynamic.discussions[post.id] : {};
-            var updatedsince = discussiondynamic.updatedsince || 0;
-            if (updatedsince < post.modified) {
-                if (typeof sitedynamic.discussions === 'undefined') sitedynamic.discussions = {};
-                if (typeof sitedynamic.discussions[post.discussionid]) sitedynamic.discussions[post.discussionid] = {};
-                sitedynamic.discussions[post.discussionid].updatedsince = updatedsince;
+
+            var storedynamic = false;
+            if (typeof sitedynamic.lastknownmodified === 'undefined') sitedynamic.lastknownmodified = 0;
+            if (sitedynamic.lastknownmodified < post.modified) {
+                sitedynamic.lastknownmodified = post.modified;
+                storedynamic = true;
+            }
+
+            if (typeof sitedynamic.discussions === 'undefined') sitedynamic.discussions = {};
+            if (typeof sitedynamic.discussions[post.discussionid] === 'undefined') sitedynamic.discussions[post.discussionid] = { updatedsince: 0 };
+            if (sitedynamic.discussions[post.discussionid] < post.modified) {
+                sitedynamic.discussions[post.discussionid].updatedsince = post.modified;
+                storedynamic = true;
+            }
+            if (storedynamic) {
                 MOODLE.siteGetDynamic(site.hash, null, sitedynamic);
             }
 

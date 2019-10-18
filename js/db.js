@@ -207,16 +207,9 @@ var DB = {
         language.langSelectors();
 
         var sites = DB.getConfig('sites', {});
-        if(Object.keys(sites).length > 0){
+        if(Object.keys(sites.hashcodes).length > 0){
             MOODLE.getPrimarySite();
-            Object.keys(sites).forEach(function(site) {
-                Object.keys(sites[site]).forEach(function(userid) {
-                    MOODLE.siteMyData(sites[site][userid].wwwroot, sites[site][userid].userid);
-                    MOODLE.getCoursesScheduled(5000, sites[site][userid]);
-                    POSTS.loadStream(sites[site].hash);
-                    CONVERSATIONS.getConversations(sites[site]);
-                });
-            });
+            DB.loadAllSites();
 
             // lists stream of posts and navigates there.
             // if not posts are loaded will navigate to #courses
@@ -225,6 +218,24 @@ var DB = {
         } else {
             UI.navigate('#welcome');
         }
+
+        // We reload data from all sites every 30 seconds.
+        //setInterval(function(){ DB.loadAllSites(); }, 10000);
+    },
+    /**
+     * Load new data from all sites.
+     */
+    loadAllSites: function() {
+        var sites = DB.getConfig('sites', {});
+
+        Object.keys(sites.hashcodes).forEach(function(sitehash) {
+            var userid = sites.hashcodes[sitehash].userid;
+            var site = sites[sites.hashcodes[sitehash].wwwroot][userid];
+            MOODLE.siteMyData(site);
+            MOODLE.getCoursesScheduled(5000, site);
+            POSTS.loadStream(site);
+            CONVERSATIONS.getConversations(site);
+        });
     },
     /**
     ** Writes properties from one object to another

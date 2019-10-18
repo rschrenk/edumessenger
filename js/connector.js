@@ -89,6 +89,8 @@ var CONNECTOR = {
                 }
 			} else if (CONNECTOR.requests_current >= CONNECTOR.REQUESTS_MAXIMUM) {
                 if (CONNECTOR.debug > 5) console.debug('Reached maximum of ' + CONNECTOR.REQUESTS_MAXIMUM + ' Requests');
+            } else {
+                $('.loading-spinner').css('display', (CONNECTOR.requests_current > 0) ? 'block' : 'none');
             }
 		}
 	},
@@ -129,7 +131,8 @@ var CONNECTOR = {
 
 		if(CONNECTOR.debug>2) console.log('> RequestId #' + o.requestId + ': ' + url, o, data);
 
-        if (!blockSend)
+        if (!blockSend) {
+            $('.loading-spinner').css('display', 'block');
             $.ajax({
                 url: url,
                 method: 'POST',
@@ -173,7 +176,7 @@ var CONNECTOR = {
             }).fail(function(jqXHR, textStatus){
                 if(CONNECTOR.debug>2) console.error('* RequestId #' + o.requestId, textStatus);
             });
-        else {
+        } else {
             console.log('Request ' + o.requestId + ' was blocked');
             CONNECTOR.requests_current--;
             CONNECTOR.next();
@@ -266,7 +269,7 @@ var CONNECTOR = {
                 }
                 if (typeof o.result.posts !== 'undefined') {
                     if (typeof discussion === 'undefined') {
-                        app.db.transaction('discussions', 'readonly').objectStore('discussions').get([wwwroot, o.data.discussionid]).onsuccess = function(event) {
+                        app.db.transaction('discussions', 'readonly').objectStore('discussions').get([site.wwwroot, o.data.discussionid]).onsuccess = function(event) {
                             var discussion = event.target.result;
                             if (discussion) {
                                 POSTS.store(site, o.result.posts);
@@ -281,17 +284,19 @@ var CONNECTOR = {
             }
             if (o.data.act == 'get_stream') {
                 if (typeof o.result.posts !== 'undefined') {
-                    POSTS.store(site, o.result.posts, o.payload);
-                    if (typeof o.result.limit !== 'undefined') {
-                        // We only automatically refresh if we are not getting behind 3 months
-                        // and the last call returned the maximum of possible items (=limit).
-                        var d = new Date();
-                        d.setMonth(d.getMonth() - 3);
-                        var keys = Object.keys(o.result.posts);
-                        var lastpost = o.result.posts[keys[keys.length - 1]];
-                        if (lastpost.modified > Math.floor(d.getTime() / 1000)
-                            && o.result.limit == Object.keys(o.result.posts).length) {
-                            POSTS.loadStream(site.hash, o.result.lastknownmodified, o.result.offset + Object.keys(o.result.posts).length, o.result.limit, o.result.ordering);
+                    if (o.result.posts.length > 0) {
+                        POSTS.store(site, o.result.posts, o.payload);
+                        if (typeof o.result.limit !== 'undefined') {
+                            // We only automatically refresh if we are not getting behind 3 months
+                            // and the last call returned the maximum of possible items (=limit).
+                            var d = new Date();
+                            d.setMonth(d.getMonth() - 3);
+                            var keys = Object.keys(o.result.posts);
+                            var lastpost = o.result.posts[keys[keys.length - 1]];
+                            if (lastpost.modified > Math.floor(d.getTime() / 1000)
+                                && o.result.limit == Object.keys(o.result.posts).length) {
+                                POSTS.loadStream(site.hash, o.result.lastknownmodified, o.result.offset + Object.keys(o.result.posts).length, o.result.limit, o.result.ordering);
+                            }
                         }
                     }
                 } else {
