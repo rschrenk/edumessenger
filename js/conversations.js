@@ -253,11 +253,13 @@ var CONVERSATIONS = {
                 }
                 predecessor = li;
                 li.removeClass('flag-removable');
+                // Now done with listStreamUser.
+                //var userpictureurl = !empty(message.userpictureurl) ? MOODLE.enhanceURL(site, message.userpictureurl) : '';
                 //$(li).find('.userpicture').attr('src', userpictureurl).attr('alt', message.userfullname || language.t('Unknown'));
                 $(li).find('.message').html(LIB.stripHTML(message.fullmessagehtml));
                 //$(li).find('.author').html(message.userfullname);
                 $(li).find('.datetime').html(UI.ts2time(message.timecreated, 'verbal'));
-                //CONVERSATIONS.listStreamUser(li, site, message);
+                CONVERSATIONS.listStreamUser(li, site, message);
                 cursor.continue();
             } else {
                 if (navigate) {
