@@ -207,7 +207,7 @@ var DB = {
         language.langSelectors();
 
         var sites = DB.getConfig('sites', {});
-        if(Object.keys(sites.hashcodes).length > 0){
+        if(typeof sites.hashcodes !== 'undefined' && Object.keys(sites.hashcodes).length > 0){
             MOODLE.getPrimarySite();
             DB.loadAllSites();
 

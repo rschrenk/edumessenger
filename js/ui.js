@@ -234,7 +234,7 @@ var UI = {
                     return language.t('ago_minutes').replace('{minutes}', diff_i);
                 } else {
                     var diff_h = Math.round(diff_i / 60);
-                    if (diff_h < 3) {
+                    if (diff_h < 24) {
                         return language.t('ago_hours').replace('{hours}', diff_h);
                     } else {
                         var diff_d = Math.round(diff_h / 24);
@@ -242,7 +242,7 @@ var UI = {
                             return language.t('ago_days').replace('{days}', diff_d);
                         } else {
                             var diff_m = Math.round(diff_d / 30);
-                            if (diff_m < 1) {
+                            if (diff_m < 2) {
                                 return language.t('ago_months_last');
                             } else {
                                 return language.t('ago_months').replace('{months}', diff_m);

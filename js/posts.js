@@ -177,6 +177,7 @@ var POSTS = {
         app.db.transaction('posts', 'readonly').objectStore('posts').index('modified').openCursor(undefined, 'prev').onsuccess = function(event) {
             var cursor = event.target.result;
             if (cursor) {
+                if (counter > maximum) { cursor.continue(); return; }
                 var post = cursor.value;
                 var site = MOODLE.siteGet(post.sitehash);
                 var wwwroothash = site.wwwroot.hashCode();
@@ -185,7 +186,6 @@ var POSTS = {
                     if (typeof blocker[wwwroothash] === 'undefined') blocker[wwwroothash] = {};
                     if (typeof blocker[wwwroothash][post.discussionid] !== 'undefined') { cursor.continue(); return; }
                     counter++;
-                    if (counter > maximum) { cursor.continue(); return; }
                     blocker[wwwroothash][post.discussionid] = true;
 
                     var userpictureurl = !empty(post.userpictureurl) ? MOODLE.enhanceURL(site, post.userpictureurl) : '';

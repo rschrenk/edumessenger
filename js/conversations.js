@@ -47,14 +47,20 @@ var CONVERSATIONS = {
      * @param userid only used when site is given as wwwroot
      */
     /* @todo since timestamp */
-    getConversations: function(site, userid) {
+    getConversations: function(site, userid, lastknownmodified) {
         // Check if we get site from wwwroot
-        if (typeof site === 'string' || typeof site === 'number') { site = MOODLE.siteGet(site, userid); }
+        if (typeof site === 'string' || typeof site === 'number') { site = MOODLE.siteGet(site, userid, lastknownmodified); }
         if (CONVERSATIONS.debug > 3) console.log('CONVERSATIONS.getConversations(site)', site);
+
+        if (typeof lastknownmodified === 'undefined') {
+            var sitedynamic = MOODLE.siteGetDynamic(site.hash);
+            lastknownmodified = sitedynamic.lastknownmodified | 0;
+        }
 
         CONNECTOR.schedule({
             data: {
                 act: 'get_conversations',
+                lastknownmodified: lastknownmodified,
             },
             identifier: 'get_conversations_' + site.hash,
             site: site,
@@ -181,7 +187,7 @@ var CONVERSATIONS = {
                 divP.removeClass('flag-removable');
                 $(divP).find('.author').html(message.userfullname || language.t('Unknown'));
                 $(divP).find('.datetime').html(UI.ts2time(message.timecreated, true));
-                $(divP).find('.message').html(LIB.injectHTML(message.fullmessagehtml, site));
+                $(divP).find('.message').html(LIB.injectHTML(message.enhancedmessage, site));
                 //$(divP).find('.attachments').html(post.message);
 
                 predecessor = divP;
@@ -216,6 +222,7 @@ var CONVERSATIONS = {
         app.db.transaction('messages', 'readonly').objectStore('messages').index('modified').openCursor(undefined, 'prev').onsuccess = function(event) {
             var cursor = event.target.result;
             if (cursor) {
+                if (counter > maximum) { cursor.continue(); return; }
                 var message = cursor.value;
                 var site = MOODLE.siteGet(message.sitehash);
                 var wwwroothash = site.wwwroot.hashCode();
@@ -223,7 +230,7 @@ var CONVERSATIONS = {
                 if (typeof blocker[wwwroothash] === 'undefined') blocker[wwwroothash] = {};
                 if (typeof blocker[wwwroothash][message.conversationid] !== 'undefined') { cursor.continue(); return; }
                 counter++;
-                if (counter > maximum) { cursor.continue(); return; }
+
                 blocker[wwwroothash][message.conversationid] = true;
 
                 var li = $(ul).children('.wwwroothash-' + wwwroothash + '.conversation-' + message.conversationid);
@@ -239,7 +246,8 @@ var CONVERSATIONS = {
                             $('<p class="message">'),
                             $('<span class="ui-li-count datetime">'),
                         ]).attr('href', '#').attr('onclick', 'CONVERSATIONS.show("' + site.wwwroot + '", undefined, ' + message.conversationid + ', 1);'),
-                    ]).addClass('sitewwwroot-' + wwwroothash)
+                    ]).addClass('sitehash-' + site.hash)
+                      .addClass('wwwroothash-' + wwwroothash)
                       .addClass('conversation-' + message.conversationid)
                       .attr('data-modified', message.modified);
                     if (typeof predecessor === 'undefined') {
@@ -256,11 +264,12 @@ var CONVERSATIONS = {
                 // Now done with listStreamUser.
                 //var userpictureurl = !empty(message.userpictureurl) ? MOODLE.enhanceURL(site, message.userpictureurl) : '';
                 //$(li).find('.userpicture').attr('src', userpictureurl).attr('alt', message.userfullname || language.t('Unknown'));
-                $(li).find('.message').html(LIB.stripHTML(message.fullmessagehtml));
+                $(li).find('.message').html(LIB.stripHTML(message.enhancedmessage));
                 //$(li).find('.author').html(message.userfullname);
                 $(li).find('.datetime').html(UI.ts2time(message.timecreated, 'verbal'));
                 CONVERSATIONS.listStreamUser(li, site, message);
                 cursor.continue();
+                console.log(blocker);
             } else {
                 if (navigate) {
                     UI.navigate((counter > 0) ? '#conversations' : '#courses');
@@ -479,15 +488,20 @@ var CONVERSATIONS = {
      * Stores messages (normally for a particular conversation).
      * @param site
      * @param messages
+     * @param reloadconversation conversationid to reload if this function was called directly and not via MESSAGES.store
      */
-    storeMessages: function(site, messages) {
-        if (CONVERSATIONS.debug > 3) { console.log('CONVERSATIONS.storeMessages(site, messages)', site, messages); }
+    storeMessages: function(site, messages, reloadconversation) {
+        if (CONVERSATIONS.debug > 3) { console.log('CONVERSATIONS.storeMessages(site, messages, reloadconversation)', site, messages, reloadconversation); }
         var store_messages = app.db.transaction('messages', 'readwrite').objectStore('messages');
         CONVERSATIONS.storeCountModify(site, Object.keys(messages).length);
 
         var sitedynamic = MOODLE.siteGetDynamic(site.hash);
 
+        var amount = Object.keys(messages).length;
+        var cur = 0;
+
         Object.keys(messages).forEach(function(messageid) {
+            cur++;
             var message = messages[messageid];
             message.modified = message.timecreated;
             message.sitehash = site.hash;
@@ -510,6 +524,10 @@ var CONVERSATIONS = {
             }
             store_messages.put(message).onsuccess = function(event) {
                 CONVERSATIONS.storeCountModify(site, -1);
+                if (cur == amount && typeof reloadconversation !== 'undefined' && reloadconversation) {
+                    CONVERSATIONS.list(site.hash, reloadconversation, false);
+                    CONVERSATIONS.listStream($('#ul-conversations').children().length, false, false);
+                }
             }
         });
     },

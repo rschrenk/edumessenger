@@ -207,7 +207,7 @@ var CONNECTOR = {
             if (o.data.act == 'create_message') {
                 $('#message-add').removeAttr('disabled');
                 if (typeof o.result.message !== 'undefined') {
-                    CONVERSATIONS.store(site, [o.result.message]);
+                    CONVERSATIONS.storeMessages(site, [o.result.message], o.data.conversationid);
                     $('#message-add').val('');
                 }
                 if (typeof o.result.error !== 'undefined') {
@@ -283,25 +283,20 @@ var CONNECTOR = {
                 }
             }
             if (o.data.act == 'get_stream') {
-                if (typeof o.result.posts !== 'undefined') {
-                    if (o.result.posts.length > 0) {
-                        POSTS.store(site, o.result.posts, o.payload);
-                        if (typeof o.result.limit !== 'undefined') {
-                            // We only automatically refresh if we are not getting behind 3 months
-                            // and the last call returned the maximum of possible items (=limit).
-                            var d = new Date();
-                            d.setMonth(d.getMonth() - 3);
-                            var keys = Object.keys(o.result.posts);
-                            var lastpost = o.result.posts[keys[keys.length - 1]];
-                            if (lastpost.modified > Math.floor(d.getTime() / 1000)
-                                && o.result.limit == Object.keys(o.result.posts).length) {
-                                POSTS.loadStream(site.hash, o.result.lastknownmodified, o.result.offset + Object.keys(o.result.posts).length, o.result.limit, o.result.ordering);
-                            }
+                if (typeof o.result.posts !== 'undefined' && Object.keys(o.result.posts).length > 0) {
+                    POSTS.store(site, o.result.posts, o.payload);
+                    if (typeof o.result.limit !== 'undefined') {
+                        // We only automatically refresh if we are not getting behind 3 months
+                        // and the last call returned the maximum of possible items (=limit).
+                        var d = new Date();
+                        d.setMonth(d.getMonth() - 3);
+                        var keys = Object.keys(o.result.posts);
+                        var lastpost = o.result.posts[keys[keys.length - 1]];
+                        if (lastpost.modified > Math.floor(d.getTime() / 1000)
+                            && o.result.limit == Object.keys(o.result.posts).length) {
+                            POSTS.loadStream(site.hash, o.result.lastknownmodified, o.result.offset + Object.keys(o.result.posts).length, o.result.limit, o.result.ordering);
                         }
                     }
-                } else {
-                    // Error occurred.
-                    UI.alert(language.t('Unkown_error_occurred'));
                 }
             }
             if (o.data.act == 'myData') {
