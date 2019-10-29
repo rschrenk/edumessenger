@@ -37,7 +37,7 @@ div[data-role="page"] {
   /* padding-top: 44px !important; */
 }
 div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[role="main"] {
-  position: absolute;
+  position: fixed;
   top: 44px;
   right: 0;
   bottom: 0;
@@ -45,7 +45,7 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   padding-top: 0;
 }
 div[data-role="page"] > div[data-role="header"][data-position="fixed"] + .ui-panel-wrapper > div[role="main"] {
-  position: absolute;
+  position: fixed;
   top: 44px;
   right: 0;
   bottom: 0;
@@ -279,7 +279,7 @@ div[data-role="page"] > div[data-role="header"][data-position="fixed"] + div[rol
   margin-bottom: 250px;
 }
 #posts div[role="main"].expanded #posts-add-box {
-  height: 250px;
+  height: 240px;
 }
 #conversation #div-conversation {
   margin-bottom: 50px;
