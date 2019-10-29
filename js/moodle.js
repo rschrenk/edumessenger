@@ -64,29 +64,27 @@ var MOODLE = {
      * @return the site.
      */
     getPrimarySite: function() {
-        var primary = DB.getConfig('site_primary', {});
-        var primarysite = MOODLE.siteGet(primary.wwwroot, primary.userid);
+        if (MOODLE.debug > 0) console.log('MOODLE.getPrimarySite()');
+        var user = DB.getConfig('user', {});
+        var primarysite;
+        if (typeof user.primarysite !== 'undefined') {
+            primarysite = MOODLE.siteGet(user.primarysite);
+        }
         if (typeof primarysite === 'undefined') {
             var sites = DB.getConfig('sites', {});
-            var keys = Object.keys(sites);
-            if (keys.length > 0) {
-                var wwwroot = keys[0];
-                var keys = Object.keys(sites[wwwroot]);
-                if (keys.length > 0) {
-                    var userid = keys[0];
-                    DB.setConfig('site_primary', { wwwroot: wwwroot, userid: userid });
-                    var primarysite = sites[wwwroot][userid];
-                }
+            if (typeof sites.hashcodes !== 'undefined' && Object.keys(sites.hashcodes).length > 0) {
+                var hashes = Object.keys(sites.hashcodes);
+                user.primarysite = +hashes[0];
+                DB.setConfig('user', user);
+                primarysite = MOODLE.siteGet(user.primarysite);
             }
         }
-
+        if (MOODLE.debug > 3) console.log('=> Primarysite is ', primarysite);
         if (typeof primarysite !== 'undefined' && typeof primarysite.user !== 'undefined') {
+            if (MOODLE.debug > 3) console.log('=> Enhancing user profile information');
             $('.user-foto').attr('src', MOODLE.enhanceURL(primarysite, primarysite.user.pictureurl));
             $('.user-firstname').html(primarysite.user.firstname);
             $('.user-lastname').html(primarysite.user.lastname);
-        } else if (typeof primarysite !== 'undefined'){
-            // infinite loop
-            //MOODLE.siteMyData(primarysite);
         }
 
         return primarysite;
