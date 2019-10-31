@@ -251,7 +251,7 @@ var CONVERSATIONS = {
                       .addClass('conversation-' + message.conversationid)
                       .attr('data-modified', message.modified);
                     if (typeof predecessor === 'undefined') {
-                        ul.append(li);
+                        ul.prepend(li);
                     } else {
                         if (predecessor.attr('data-modified') != li.prev().attr('data-modified')) {
                             li.insertAfter(predecessor);

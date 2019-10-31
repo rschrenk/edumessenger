@@ -208,7 +208,7 @@ var POSTS = {
                           .addClass('discussion-' + post.discussionid)
                           .attr('data-modified', post.modified);
                         if (typeof predecessor === 'undefined') {
-                            ul.append(li);
+                            ul.prepend(li);
                         } else {
                             if (predecessor.attr('data-modified') != li.prev().attr('data-modified')) {
                                 li.insertAfter(predecessor);
