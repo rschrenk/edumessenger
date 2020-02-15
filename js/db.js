@@ -1,7 +1,7 @@
 var DB = {
     debug: 1,
     k9: 999999999999999999, // Represents the unreachable timestamp for searching an index
-    appid: 'edumessenger', // This is the app-id for moodle-local_eduauth.
+    appid: 'rschrenk.phonegap.edumessenger', // This is the app-id for moodle-local_eduauth.
     idbname: 'edm6',
     idbversion: 4,
     hasupgraded: false, // Triggers if a db upgrade has been made
